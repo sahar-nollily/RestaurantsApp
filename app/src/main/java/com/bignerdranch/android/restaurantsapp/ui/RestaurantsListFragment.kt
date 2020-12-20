@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -17,9 +16,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.restaurantsapp.R
-import com.bignerdranch.android.restaurantsapp.Yelp.Restaurant
+import com.bignerdranch.android.restaurantsapp.yelp.Restaurant
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentRestaurantsListBinding
-import com.bignerdranch.android.restaurantsapp.databinding.ListItemViewBinding
+import com.bignerdranch.android.restaurantsapp.databinding.RestaurantListItemBinding
 import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantsViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.weather.WeathersViewModel
@@ -52,7 +51,7 @@ class RestaurantsListFragment : Fragment() {
         val binding: FragmentRestaurantsListBinding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_restaurants_list,container,false)
         if(isNetworkAvailable()){
-            restaurantsViewModel.getRestaurants("Bearer $RESTAURANT_API_KEY","all", args.latitude, args.longitude).observe(viewLifecycleOwner,
+            restaurantsViewModel.getRestaurants("Bearer $RESTAURANT_API_KEY",args.places, args.latitude, args.longitude).observe(viewLifecycleOwner,
                     Observer{
                         adapter.setData(it)
                     }
@@ -74,14 +73,13 @@ class RestaurantsListFragment : Fragment() {
         }
 
         weathersViewModel.getForecast(WEATHER_API_KEY,"${args.latitude}, ${args.longitude}","7",1).observe(viewLifecycleOwner, Observer {
-            Toast.makeText(context,it.toString(),Toast.LENGTH_LONG).show()
             Log.d("TEST","*********************************************************"+it.toString())
 
         })
         return binding.root
     }
 
-    private class RestaurantHolder(private val binding: ListItemViewBinding): RecyclerView.ViewHolder(binding.root){
+    private class RestaurantHolder(private val binding: RestaurantListItemBinding): RecyclerView.ViewHolder(binding.root){
 
         fun bind(restaurant: Restaurant){
             binding.viewModel = RestaurantViewModel(restaurant)
@@ -95,8 +93,8 @@ class RestaurantsListFragment : Fragment() {
 
     private inner class RestaurantAdapter(private var restaurant:List<Restaurant>):RecyclerView.Adapter<RestaurantHolder>(){
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RestaurantHolder {
-            val binding: ListItemViewBinding = DataBindingUtil.inflate(layoutInflater,
-                R.layout.list_item_view,parent,false)
+            val binding: RestaurantListItemBinding = DataBindingUtil.inflate(layoutInflater,
+                R.layout.restaurant_list_item,parent,false)
 
             return RestaurantHolder(
                 binding

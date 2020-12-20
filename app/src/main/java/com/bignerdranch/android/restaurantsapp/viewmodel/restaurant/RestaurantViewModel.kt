@@ -1,7 +1,7 @@
 package com.bignerdranch.android.restaurantsapp.viewmodel.restaurant
 
 import androidx.databinding.BaseObservable
-import com.bignerdranch.android.restaurantsapp.Yelp.Restaurant
+import com.bignerdranch.android.restaurantsapp.yelp.Restaurant
 
 class RestaurantViewModel (
     restaurant: Restaurant

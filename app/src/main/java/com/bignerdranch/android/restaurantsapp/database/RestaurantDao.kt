@@ -3,7 +3,7 @@ package com.bignerdranch.android.restaurantsapp.database
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.bignerdranch.android.restaurantsapp.Yelp.Restaurant
+import com.bignerdranch.android.restaurantsapp.yelp.Restaurant
 
 @Dao
 interface RestaurantDao{
