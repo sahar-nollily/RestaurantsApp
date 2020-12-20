@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.bignerdranch.android.restaurantsapp.viewmodel.RestaurantViewModel" />
+            type="com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
