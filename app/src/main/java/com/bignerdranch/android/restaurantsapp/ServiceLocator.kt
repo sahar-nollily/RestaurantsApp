@@ -1,7 +1,10 @@
 package com.bignerdranch.android.restaurantsapp
 
+import android.content.Context
+import androidx.room.Room
 import com.bignerdranch.android.restaurantsapp.Yelp.YelpApi
 import com.bignerdranch.android.restaurantsapp.Yelp.YelpRepository
+import com.bignerdranch.android.restaurantsapp.database.RestaurantDatabase
 import com.bignerdranch.android.restaurantsapp.weather.WeatherApi
 import com.bignerdranch.android.restaurantsapp.weather.WeatherRepository
 import retrofit2.Retrofit
@@ -9,16 +12,18 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ServiceLocator {
     private lateinit var app: App
-    lateinit var yelpRetrofit: Retrofit
-    lateinit var weatherRetrofit: Retrofit
+    private lateinit var yelpRetrofit: Retrofit
+    private lateinit var weatherRetrofit: Retrofit
     private lateinit var yelpApi: YelpApi
     private lateinit var weatherApi: WeatherApi
+    private lateinit var restaurantDatabase: RestaurantDatabase
 
 
     fun init(app: App) {
         this.app = app
         initializeYelpNetwork()
         initializeWeatherNetwork()
+        initializeDatabase(app)
     }
 
     private fun initializeYelpNetwork() {
@@ -41,8 +46,17 @@ object ServiceLocator {
 
     }
 
+    private fun initializeDatabase(context: Context) {
+        restaurantDatabase = Room.databaseBuilder(
+            context,
+            RestaurantDatabase::class.java,
+            "restaurant_db"
+        ).build()
+    }
+
+
     val yelpRepository: YelpRepository by lazy {
-        YelpRepository(yelpApi)
+        YelpRepository(yelpApi, restaurantDatabase.restaurantDao())
     }
 
     val weatherRepository: WeatherRepository by lazy {

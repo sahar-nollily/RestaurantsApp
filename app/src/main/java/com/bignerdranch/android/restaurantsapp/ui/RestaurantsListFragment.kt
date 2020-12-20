@@ -1,13 +1,16 @@
 package com.bignerdranch.android.restaurantsapp.ui
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -20,7 +23,6 @@ import com.bignerdranch.android.restaurantsapp.databinding.ListItemViewBinding
 import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantsViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.weather.WeathersViewModel
-import com.bignerdranch.android.restaurantsapp.weather.Weather
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -49,11 +51,23 @@ class RestaurantsListFragment : Fragment() {
     ): View? {
         val binding: FragmentRestaurantsListBinding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_restaurants_list,container,false)
-        restaurantsViewModel.getRestaurants("Bearer $RESTAURANT_API_KEY","all", args.latitude, args.longitude).observe(viewLifecycleOwner,
-            Observer{
-                adapter.setData(it)
-            }
-        )
+        if(isNetworkAvailable()){
+            restaurantsViewModel.getRestaurants("Bearer $RESTAURANT_API_KEY","all", args.latitude, args.longitude).observe(viewLifecycleOwner,
+                    Observer{
+                        adapter.setData(it)
+                    }
+            )
+            Log.d("TEST","********************************************************* there is an Internet")
+        }
+        else{
+            restaurantsViewModel.getRestaurant().observe(viewLifecycleOwner,
+                    Observer{
+                        adapter.setData(it)
+                    }
+            )
+            Log.d("TEST","********************************************************* no Internet")
+        }
+
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = this@RestaurantsListFragment.adapter
@@ -102,5 +116,14 @@ class RestaurantsListFragment : Fragment() {
         }
 
     }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE)
+        return if (connectivityManager is ConnectivityManager) {
+            val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
+            networkInfo?.isConnected ?: false
+        } else false
+    }
+
 
 }

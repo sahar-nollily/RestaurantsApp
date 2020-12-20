@@ -12,6 +12,14 @@ class RestaurantsViewModel : ViewModel(){
     var yelpRepository= ServiceLocator.yelpRepository
     var restaurant = MutableLiveData<List<Restaurant>>()
 
+    fun getRestaurant() : LiveData<List<Restaurant>> {
+        viewModelScope.launch {
+        restaurant.value = yelpRepository.getRestaurant()
+        }
+        return restaurant
+    }
+
+
     fun getRestaurants(authorization: String, term:String,latitude: String, longitude: String): LiveData<List<Restaurant>> {
         viewModelScope.launch {
             restaurant.value= yelpRepository.getRestaurants(authorization, term, latitude, longitude)
