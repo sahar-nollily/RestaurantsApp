@@ -1,6 +1,7 @@
 package com.bignerdranch.android.restaurantsapp.database
 
 import androidx.room.TypeConverter
+import com.bignerdranch.android.restaurantsapp.yelp.PlacesLocation
 import com.bignerdranch.android.restaurantsapp.yelp.YelpCategory
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -18,5 +19,17 @@ class RestaurantTypeConverters {
         val gson = Gson()
         val type = object : TypeToken<List<YelpCategory>>() {}.type
         return gson.fromJson<List<YelpCategory>>(title, type)
+    }
+
+    @TypeConverter
+    fun fromObject(placesLocation: PlacesLocation):String{
+        return "${placesLocation.latitude},${placesLocation.longitude}"
+    }
+
+    @TypeConverter
+    fun toObject(location :String):PlacesLocation{
+        val x = location.split(",")
+        val placesLocation = PlacesLocation(x[0].toDouble(),x[1].toDouble())
+        return placesLocation
     }
 }

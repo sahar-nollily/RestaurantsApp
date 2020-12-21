@@ -20,6 +20,9 @@
             android:name="places"
             app:argType="string"
             android:defaultValue="all" />
+        <action
+            android:id="@+id/action_restaurantsApp_to_restaurantsDetailFragment"
+            app:destination="@id/restaurantsDetailFragment" />
 
     </fragment>
     <fragment
@@ -36,6 +39,10 @@
         <action
             android:id="@+id/action_mapsFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <argument
+            android:name="fragmentID"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
@@ -48,5 +55,20 @@
         <action
             android:id="@+id/action_mainFragment_to_restaurantsApp"
             app:destination="@id/restaurantsApp" />
+    </fragment>
+    <fragment
+        android:id="@+id/restaurantsDetailFragment"
+        android:name="com.bignerdranch.android.restaurantsapp.ui.RestaurantsDetailFragment"
+        android:label="fragment_restaurants_detail"
+        tools:layout="@layout/fragment_restaurants_detail" >
+        <argument
+            android:name="restaurantId"
+            app:argType="string" />
+        <argument
+            android:name="latLang"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_restaurantsDetailFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
     </fragment>
 </navigation>

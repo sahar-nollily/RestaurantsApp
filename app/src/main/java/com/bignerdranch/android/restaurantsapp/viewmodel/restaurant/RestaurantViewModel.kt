@@ -4,7 +4,7 @@ import androidx.databinding.BaseObservable
 import com.bignerdranch.android.restaurantsapp.yelp.Restaurant
 
 class RestaurantViewModel (
-    restaurant: Restaurant
+    restaurant: Restaurant,
 ) : BaseObservable() {
     val name: String = restaurant.name
     val rating: Float = restaurant.rating.toFloat()

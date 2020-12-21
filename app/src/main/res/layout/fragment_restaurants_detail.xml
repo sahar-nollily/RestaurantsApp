@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.RestaurantsDetailFragment">
+
+    <data>
+        <variable
+            name="restaurantDetailViewModel"
+            type="com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantDetailViewModel"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:adjustViewBounds="true"
+            android:layout_height="250dp"/>
+
+        <TextView
+            android:id="@+id/restaurant_is_closed_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-20dp"
+            android:paddingEnd="20dp"
+            android:textSize="15dp"
+            android:textColor="#35CEDC"
+            android:text="@{restaurantDetailViewModel.isClose()}"
+            android:gravity="end" />
+
+        <me.relex.circleindicator.CircleIndicator3
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="-20dp"
+            android:background="#6AF4F4F4"
+            />
+
+        <TextView
+            android:id="@+id/restaurant_name_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="serif"
+            android:paddingStart="20dp"
+            android:layout_marginTop="10dp"
+            android:text="@{restaurantDetailViewModel.name}"
+            android:textColor="#74D5F3"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/restaurant_location_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:text="@{restaurantDetailViewModel.location}" />
+
+        <TextView
+            android:id="@+id/restaurant_share_text_view"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="-40dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/ic_baseline_share_24"
+            android:layout_gravity="end" />
+
+        <TextView
+            android:id="@+id/restaurant_phone_text_view"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="-30dp"
+            android:layout_marginEnd="70dp"
+            android:background="@drawable/ic_baseline_call_24"
+            android:layout_gravity="end" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="20dp"
+            android:padding="20dp"
+            android:background="#99959393" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/weather_linear_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/map_direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+
+    </LinearLayout>
+
+
+</layout>

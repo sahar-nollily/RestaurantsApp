@@ -48,6 +48,13 @@ class MapsFragment : Fragment(),OnMapReadyCallback {
         longitude = args.longitude.toDouble()
         autoComplatePlacesEditText = view.findViewById(R.id.search_edit_text)
         chooseLocationButton = view.findViewById(R.id.choose_location_Button)
+        if(args.fragmentID == 1){
+            autoComplatePlacesEditText.visibility = View.GONE
+            chooseLocationButton.visibility = View.GONE
+        }else{
+            autoComplatePlacesEditText.visibility = View.VISIBLE
+            chooseLocationButton.visibility = View.VISIBLE
+        }
         chooseLocationButton.setOnClickListener {
             val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
             if (sharedPref != null) {

@@ -13,4 +13,5 @@
     <string name="latitude">UserLatitude</string>
     <string name="longitude">UserLongitude</string>
     <string name="all">All Places</string>
+    <string name="share">Share</string>
 </resources>
