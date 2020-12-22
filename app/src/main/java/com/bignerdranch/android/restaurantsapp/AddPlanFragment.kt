@@ -1,0 +1,174 @@
+package com.bignerdranch.android.restaurantsapp
+
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.bignerdranch.android.restaurantsapp.database.plan.Plan
+import com.bignerdranch.android.restaurantsapp.databinding.FragmentAddPlanBinding
+import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
+
+
+class AddPlanFragment : Fragment() {
+
+    val args by navArgs<AddPlanFragmentArgs>()
+
+    private val planViewModel:PlanViewModel by lazy {
+        ViewModelProvider(this).get(PlanViewModel::class.java)
+    }
+
+    private lateinit var binding :FragmentAddPlanBinding
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_add_plan, container, false)
+
+        setColor()
+
+        if(args.CRUD == "add"){
+            binding.updateLinearLayout.visibility = View.GONE
+            binding.createButton.visibility = View.VISIBLE
+            binding.createButton.setOnClickListener {
+                val name = binding.planNameTextView.text.toString()
+                val color = binding.color.text.toString()
+                val date = binding.planDateTextView.text.toString()
+                val description = binding.planDescriptionTextView.text.toString()
+                checkInputValidation(name, description)
+                if(checkInputValidation(name, description)){
+                    val plan = Plan(0, name,color, date, description)
+                    planViewModel.addPlan(plan)
+                    val action = AddPlanFragmentDirections.actionAddPlanFragmentToUserPlansFragment()
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
+        if(args.CRUD == "update"){
+            binding.updateLinearLayout.visibility = View.VISIBLE
+            binding.createButton.visibility = View.GONE
+            val plan = args.plan
+            if(plan != null){
+                binding.planNameTextView.setText(plan.planName)
+                binding.planDateTextView.setText(plan.date)
+                binding.planDescriptionTextView.setText(plan.planDescription)
+                binding.updateButton.setOnClickListener {
+                    val name = binding.planNameTextView.text.toString()
+                    val color = binding.color.text.toString()
+                    val date = binding.planDateTextView.text.toString()
+                    val description = binding.planDescriptionTextView.text.toString()
+                    checkInputValidation(name, description)
+                    if(checkInputValidation(name, description)){
+                        val plan = Plan(plan.planID, name,color, date, description)
+                        planViewModel.updatePlan(plan)
+                        val action = AddPlanFragmentDirections.actionAddPlanFragmentToUserPlansFragment()
+                        findNavController().navigate(action)
+                    }
+                }
+                binding.deleteTextView.setOnClickListener {
+                    planViewModel.deletePlan(plan)
+                    val action = AddPlanFragmentDirections.actionAddPlanFragmentToUserPlansFragment()
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
+
+        return binding.root
+    }
+
+    private fun checkInputValidation(name: String, description: String): Boolean{
+        return if(name.isEmpty() && description.isEmpty()){
+            binding.planNameTextView.error = "required"
+            binding.planDescriptionTextView.error = "required"
+            false
+        }else if(name.isEmpty()){
+            binding.planNameTextView.error = "required"
+            false
+        }else if(description.isEmpty()){
+            binding.planDescriptionTextView.error = "required"
+            false
+        }else{
+            true
+        }
+    }
+
+    private fun setColor() {
+        binding.cyan.setOnClickListener {
+            binding.color.text = "cyan"
+            binding.cyan.text = " ✔"
+            binding.purple.text = ""
+            binding.gray.text = ""
+            binding.green.text = ""
+            binding.yellow.text = ""
+            binding.orange.text = ""
+            binding.pink.text = ""
+        }
+        binding.purple.setOnClickListener {
+            binding.color.text = "purple"
+            binding.cyan.text = ""
+            binding.purple.text = " ✔"
+            binding.gray.text = ""
+            binding.green.text = ""
+            binding.yellow.text = ""
+            binding.orange.text = ""
+            binding.pink.text = ""
+        }
+        binding.gray.setOnClickListener {
+            binding.color.text = "gray"
+            binding.cyan.text = ""
+            binding.purple.text = ""
+            binding.gray.text = " ✔"
+            binding.green.text = ""
+            binding.yellow.text = ""
+            binding.orange.text = ""
+            binding.pink.text = ""
+        }
+        binding.green.setOnClickListener {
+            binding.color.text = "green"
+            binding.cyan.text = ""
+            binding.purple.text = ""
+            binding.gray.text = ""
+            binding.green.text = " ✔"
+            binding.yellow.text = ""
+            binding.orange.text = ""
+            binding.pink.text = ""
+        }
+        binding.yellow.setOnClickListener {
+            binding.color.text = "yellow"
+            binding.cyan.text = ""
+            binding.purple.text = ""
+            binding.gray.text = ""
+            binding.green.text = ""
+            binding.yellow.text = " ✔"
+            binding.orange.text = ""
+            binding.pink.text = ""
+        }
+        binding.orange.setOnClickListener {
+            binding.color.text = "orange"
+            binding.cyan.text = ""
+            binding.purple.text = ""
+            binding.gray.text = ""
+            binding.green.text = ""
+            binding.yellow.text = ""
+            binding.orange.text = " ✔"
+            binding.pink.text = ""
+        }
+        binding.pink.setOnClickListener {
+            binding.color.text = "pink"
+            binding.cyan.text = ""
+            binding.purple.text = ""
+            binding.gray.text = ""
+            binding.green.text = ""
+            binding.yellow.text = ""
+            binding.orange.text = ""
+            binding.pink.text = " ✔"
+        }
+
+    }
+
+}

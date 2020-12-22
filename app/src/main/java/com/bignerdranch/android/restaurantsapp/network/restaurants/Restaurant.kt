@@ -1,4 +1,4 @@
-package com.bignerdranch.android.restaurantsapp.yelp
+package com.bignerdranch.android.restaurantsapp.network.restaurants
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

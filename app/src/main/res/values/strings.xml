@@ -14,4 +14,14 @@
     <string name="longitude">UserLongitude</string>
     <string name="all">All Places</string>
     <string name="share">Share</string>
+    <string name="no_internet">No Internet Connection</string>
+    <string name="there_is_no_plans">There is No Plans</string>
+    <string name="add_plan">Add Plan</string>
+    <string name="plan_name">Plan Name</string>
+    <string name="date">Date</string>
+    <string name="description">description</string>
+    <string name="create">Create</string>
+    <string name="update">Update</string>
+    <string name="your_plan">Your Plans</string>
+    <string name="plan">Plan Your Days</string>
 </resources>

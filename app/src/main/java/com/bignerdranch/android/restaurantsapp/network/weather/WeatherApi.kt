@@ -1,4 +1,4 @@
-package com.bignerdranch.android.restaurantsapp.weather
+package com.bignerdranch.android.restaurantsapp.network.weather
 
 import retrofit2.http.GET
 import retrofit2.http.Query

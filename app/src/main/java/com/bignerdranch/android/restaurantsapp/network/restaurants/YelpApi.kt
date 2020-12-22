@@ -1,4 +1,4 @@
-package com.bignerdranch.android.restaurantsapp.yelp
+package com.bignerdranch.android.restaurantsapp.network.restaurants
 
 import retrofit2.http.GET
 import retrofit2.http.Header

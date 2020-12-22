@@ -1,10 +1,10 @@
-package com.bignerdranch.android.restaurantsapp.database
+package com.bignerdranch.android.restaurantsapp.database.restaurant
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.bignerdranch.android.restaurantsapp.yelp.Restaurant
+import com.bignerdranch.android.restaurantsapp.network.restaurants.Restaurant
 
 @Dao
 interface RestaurantDao{
@@ -17,4 +17,8 @@ interface RestaurantDao{
 
     @Query("DELETE FROM Restaurant")
     suspend fun deleteRestaurants()
+
+    @Query("DELETE FROM Weather")
+    suspend fun deleteWeather()
+
 }
