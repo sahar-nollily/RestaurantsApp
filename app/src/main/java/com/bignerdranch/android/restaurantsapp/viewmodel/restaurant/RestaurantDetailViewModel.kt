@@ -9,6 +9,7 @@ class RestaurantDetailViewModel(
     val name: String = restaurantDetail.name
     val location: String = "${restaurantDetail.location.city}, ${restaurantDetail.location.address1}"
     val isClose: String = restaurantDetail.isClosed()
-    val phone: String = restaurantDetail.phone
+    val note: String= restaurantDetail.note
+    val categories = restaurantDetail.categories[0].title
 
 }

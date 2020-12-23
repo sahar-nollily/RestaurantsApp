@@ -10,5 +10,5 @@ class ForecastWeatherViewModel (
     val temp_f = forecast.temp_f.toInt().toString()+"F°"
     val time = forecast.time.split(" ")[1]
     val weatherText = forecast.condition.text
-    val icon: String = forecast.condition.icon
+    val icon = forecast.condition.icon
 }

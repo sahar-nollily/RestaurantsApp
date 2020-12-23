@@ -8,9 +8,9 @@ import kotlinx.android.parcel.Parcelize
 @Entity
 @Parcelize
 data class Plan(
-    @PrimaryKey(autoGenerate = true) val planID: Int,
-    val planName: String,
-    val color: String,
-    val date: String,
-    val planDescription: String
+    @PrimaryKey(autoGenerate = true) val planID: Int=0,
+    val planName: String="",
+    val color: String= "cyan",
+    val date: String="",
+    val planDescription: String=""
 ):Parcelable

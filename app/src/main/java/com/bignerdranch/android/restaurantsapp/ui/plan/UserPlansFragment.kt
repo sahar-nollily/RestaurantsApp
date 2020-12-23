@@ -1,4 +1,4 @@
-package com.bignerdranch.android.restaurantsapp
+package com.bignerdranch.android.restaurantsapp.ui.plan
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,28 +10,35 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bignerdranch.android.restaurantsapp.CheckNetwork
+import com.bignerdranch.android.restaurantsapp.R
 import com.bignerdranch.android.restaurantsapp.database.plan.Plan
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentUserPlansBinding
 import com.bignerdranch.android.restaurantsapp.databinding.UserPlansItemBinding
-import com.bignerdranch.android.restaurantsapp.databinding.ViewPagerItemBinding
+import com.bignerdranch.android.restaurantsapp.ui.restaurant.RESTAURANT_API_KEY
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlansViewModel
-import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantViewModel
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
+import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantsViewModel
 
 
 class UserPlansFragment : Fragment() {
 
+    private val args by navArgs<UserPlansFragmentArgs>()
+
     private val planViewModel: PlanViewModel by lazy {
         ViewModelProvider(this).get(PlanViewModel::class.java)
     }
+
+    private val restaurantsViewModel: RestaurantsViewModel by lazy {
+        ViewModelProvider(this).get(RestaurantsViewModel::class.java)
+    }
+
     private var adapter = PlanAdapter(emptyList())
+    private lateinit var checkNetwork: CheckNetwork
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,26 +46,36 @@ class UserPlansFragment : Fragment() {
     ): View? {
         val binding: FragmentUserPlansBinding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_user_plans, container, false)
+        checkNetwork = CheckNetwork(context)
 
         planViewModel.getPlan.observe(viewLifecycleOwner, Observer {
-            adapter.setDate(it)
             if(it.isEmpty()){
                 binding.addPlanTextView.visibility = View.VISIBLE
                 binding.addPlanButton.visibility = View.VISIBLE
                 binding.recyclerView.visibility = View.GONE
+                binding.planDescriptionTextView.visibility = View.GONE
             }else{
                 binding.addPlanTextView.visibility = View.GONE
                 binding.addPlanButton.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE
+                binding.addPlanFloatingUtton.visibility = View.VISIBLE
+                binding.planDescriptionTextView.visibility = View.GONE
             }
+            adapter.setDate(it)
         })
 
         binding.addPlanButton.setOnClickListener {
-            val action = UserPlansFragmentDirections.actionUserPlansFragmentToAddPlanFragment("add")
+            val action =
+                UserPlansFragmentDirections.actionUserPlansFragmentToAddPlanFragment(
+                    "add"
+                )
             findNavController().navigate(action)
         }
         binding.addPlanFloatingUtton.setOnClickListener {
-                val action = UserPlansFragmentDirections.actionUserPlansFragmentToAddPlanFragment("add")
+                val action =
+                    UserPlansFragmentDirections.actionUserPlansFragmentToAddPlanFragment(
+                        "add"
+                    )
                 findNavController().navigate(action)
         }
 
@@ -74,9 +91,13 @@ class UserPlansFragment : Fragment() {
         fun bind(plan: Plan){
             binding.planViewModel = PlansViewModel(plan)
             val color = resources.getIdentifier(plan.color, "color", context?.packageName)
-            binding.itemView.background = ContextCompat.getDrawable(requireContext(), color)
+            binding.itemViewConstraintLayout.background = ContextCompat.getDrawable(requireContext(), color)
             binding.editPlan.setOnClickListener {
-                val action = UserPlansFragmentDirections.actionUserPlansFragmentToAddPlanFragment("update",plan)
+                val action =
+                    UserPlansFragmentDirections.actionUserPlansFragmentToAddPlanFragment(
+                        "update",
+                        plan
+                    )
                 findNavController().navigate(action)
             }
         }
@@ -91,8 +112,26 @@ class UserPlansFragment : Fragment() {
 
         override fun getItemCount()= plans.size
         override fun onBindViewHolder(holder: PlanHolder, position: Int) {
-            val plan = plans[position]
-            holder.bind(plan)
+            if(plans.isNotEmpty()){
+                val plan = plans[position]
+                holder.bind(plan)
+
+                holder.itemView.setOnClickListener {
+                    if(checkNetwork.isNetworkAvailable()){
+                        if(args.CRUD == "add"){
+                            val restaurantDetails = restaurantsViewModel.restaurantDetails("Bearer $RESTAURANT_API_KEY",args.placeID).value
+                            if(restaurantDetails != null){
+                                restaurantDetails.favID = args.placeID
+                                restaurantDetails.planID = plan.planID
+                                restaurantDetails.note = args.note
+                                planViewModel.addFavPlace(restaurantDetails)
+                            }
+                        }
+                        val action = UserPlansFragmentDirections.actionUserPlansFragmentToDayPlansFragment(plan)
+                        findNavController().navigate(action)
+                    }
+                }
+            }
         }
 
         fun setDate(plans: List<Plan>){

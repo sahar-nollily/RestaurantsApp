@@ -24,4 +24,6 @@
     <string name="update">Update</string>
     <string name="your_plan">Your Plans</string>
     <string name="plan">Plan Your Days</string>
+    <string name="write_your_note_here">Write your note here</string>
+    <string name="add_note">Add Note</string>
 </resources>
