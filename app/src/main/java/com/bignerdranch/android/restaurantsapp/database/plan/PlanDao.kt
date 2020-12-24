@@ -25,7 +25,10 @@ interface PlanDao{
     @Query("SELECT * FROM RestaurantDetail WHERE planID =:planID ")
     fun getFavPlace(planID: String): LiveData<List<RestaurantDetail>>
 
-    @Query("SELECT * FROM RestaurantDetail WHERE favID =:favID ")
-    fun getFavDetails(favID: String): LiveData<RestaurantDetail>
+    @Query("SELECT * FROM RestaurantDetail WHERE restaurantID =:restaurantID ")
+    fun getFavDetails(restaurantID: String): LiveData<RestaurantDetail>
+
+    @Delete
+    suspend fun deleteFavDetails(restaurantDetail: RestaurantDetail)
 
 }

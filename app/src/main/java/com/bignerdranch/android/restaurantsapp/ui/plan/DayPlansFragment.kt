@@ -1,34 +1,27 @@
 package com.bignerdranch.android.restaurantsapp.ui.plan
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
+import android.app.AlertDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bignerdranch.android.restaurantsapp.CheckNetwork
+import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
-import com.bignerdranch.android.restaurantsapp.database.plan.Plan
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentDayPlansBinding
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentUserPlansBinding
-import com.bignerdranch.android.restaurantsapp.databinding.UserPlansItemBinding
 import com.bignerdranch.android.restaurantsapp.network.restaurants.RestaurantDetail
-import com.bignerdranch.android.restaurantsapp.ui.restaurant.RESTAURANT_API_KEY
+import com.bignerdranch.android.restaurantsapp.util.SwipeController
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
-import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlansViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantDetailViewModel
-import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantsViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -37,7 +30,7 @@ import com.bumptech.glide.request.RequestOptions
 
 class DayPlansFragment : Fragment() {
 
-    val args by navArgs<DayPlansFragmentArgs>()
+    private val args by navArgs<DayPlansFragmentArgs>()
 
     private val planViewModel: PlanViewModel by lazy {
         ViewModelProvider(this).get(PlanViewModel::class.java)
@@ -54,6 +47,7 @@ class DayPlansFragment : Fragment() {
         checkNetwork = CheckNetwork(context)
         binding.textView.text = args.plan.planName
         binding.planDescriptionTextView.text = args.plan.planDescription
+        binding.addPlanTextView.text= getString(R.string.no_places)
         planViewModel.getFavPlace(args.plan.planID.toString()).observe(viewLifecycleOwner, Observer {
             adapter.setDate(it)
             if(it.isEmpty()){
@@ -69,6 +63,15 @@ class DayPlansFragment : Fragment() {
                 binding.planDescriptionTextView.visibility = View.VISIBLE
             }
         })
+
+
+        val item = object : SwipeController(requireContext(), 0, ItemTouchHelper.LEFT){
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                adapter.deleteDate(viewHolder.adapterPosition)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(item)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
@@ -105,10 +108,9 @@ class DayPlansFragment : Fragment() {
             holder.bind(plan)
 
             holder.itemView.setOnClickListener {
-                val action = DayPlansFragmentDirections.actionDayPlansFragmentToRestaurantsDetailFragment(plan.favID,true,latLng)
+                val action = DayPlansFragmentDirections.actionDayPlansFragmentToRestaurantsDetailFragment(plan.restaurantID,true,latLng)
                 findNavController().navigate(action)
             }
-
 
         }
 
@@ -117,6 +119,22 @@ class DayPlansFragment : Fragment() {
             notifyDataSetChanged()
         }
 
+        fun deleteDate(position: Int){
+            val dialog = AlertDialog.Builder(context)
+            dialog.setTitle("Confirm")
+                    .setMessage("Are you sure ? ")
+                    .setNegativeButton("Cancel") { dialoginterface, i ->
+
+                    }
+                    .setPositiveButton("Ok") { dialoginterface, i ->
+                        val _plans = plans as MutableList
+                        planViewModel.deleteFavDetails(plans[position])
+                        _plans.removeAt(position)
+                        this.plans = _plans
+                        notifyDataSetChanged()
+                    }.show()
+        }
     }
+
 
 }

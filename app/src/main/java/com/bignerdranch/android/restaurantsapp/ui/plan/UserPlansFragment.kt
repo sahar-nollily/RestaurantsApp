@@ -13,12 +13,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bignerdranch.android.restaurantsapp.CheckNetwork
+import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
 import com.bignerdranch.android.restaurantsapp.database.plan.Plan
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentUserPlansBinding
 import com.bignerdranch.android.restaurantsapp.databinding.UserPlansItemBinding
-import com.bignerdranch.android.restaurantsapp.ui.restaurant.RESTAURANT_API_KEY
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlansViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantsViewModel
@@ -119,17 +118,17 @@ class UserPlansFragment : Fragment() {
                 holder.itemView.setOnClickListener {
                     if(checkNetwork.isNetworkAvailable()){
                         if(args.CRUD == "add"){
-                            val restaurantDetails = restaurantsViewModel.restaurantDetails("Bearer $RESTAURANT_API_KEY",args.placeID).value
+                            val restaurantDetails = restaurantsViewModel.restaurantDetails("Bearer ${getString(R.string.RESTAURANT_API_KEY)}",args.placeID).value
                             if(restaurantDetails != null){
-                                restaurantDetails.favID = args.placeID
+                                restaurantDetails.restaurantID = args.placeID
                                 restaurantDetails.planID = plan.planID
                                 restaurantDetails.note = args.note
                                 planViewModel.addFavPlace(restaurantDetails)
                             }
                         }
+                    }
                         val action = UserPlansFragmentDirections.actionUserPlansFragmentToDayPlansFragment(plan)
                         findNavController().navigate(action)
-                    }
                 }
             }
         }

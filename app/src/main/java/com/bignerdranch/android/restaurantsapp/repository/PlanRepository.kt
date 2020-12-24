@@ -8,7 +8,7 @@ class PlanRepository (private val planDao: PlanDao){
 
     val getPlan = planDao.getPlan()
     fun getFavPlace(planID: String) = planDao.getFavPlace(planID)
-    fun getFavDetails(favID: String) = planDao.getFavDetails(favID)
+    fun getFavDetails(restaurantID: String) = planDao.getFavDetails(restaurantID)
 
     suspend fun addPlan(plan: Plan){
         planDao.addPlan(plan)
@@ -26,5 +26,8 @@ class PlanRepository (private val planDao: PlanDao){
         planDao.addFavPlace(restaurantDetail)
     }
 
+    suspend fun deleteFavDetails(restaurantDetail: RestaurantDetail){
+        planDao.deleteFavDetails(restaurantDetail)
+    }
 
 }

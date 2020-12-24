@@ -13,7 +13,7 @@ class PlanViewModel: ViewModel() {
     private val planRepository= ServiceLocator.planRepository
     val getPlan : LiveData<List<Plan>> = planRepository.getPlan
     fun getFavPlace(planID: String) : LiveData<List<RestaurantDetail>> = planRepository.getFavPlace(planID)
-    fun getFavDetails(favID: String) = planRepository.getFavDetails(favID)
+    fun getFavDetails(restaurantID: String) = planRepository.getFavDetails(restaurantID)
 
 
     fun addPlan(plan: Plan){
@@ -42,6 +42,11 @@ class PlanViewModel: ViewModel() {
         }
     }
 
+    fun deleteFavDetails(restaurantDetail: RestaurantDetail){
+        viewModelScope.launch {
+            planRepository.deleteFavDetails(restaurantDetail)
+        }
+    }
 
 
 }

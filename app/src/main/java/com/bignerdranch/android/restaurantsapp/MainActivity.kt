@@ -1,14 +1,12 @@
 package com.bignerdranch.android.restaurantsapp
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.bignerdranch.android.restaurantsapp.databinding.ActivityMainBinding
+import com.bignerdranch.android.restaurantsapp.util.ConnectivityLiveData
 
 class MainActivity : AppCompatActivity() {
     private lateinit var connectivityLiveData: ConnectivityLiveData

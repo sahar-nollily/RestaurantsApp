@@ -27,7 +27,7 @@ class MainFragment : Fragment() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     var latuitude : Double = 0.0
     var longitude: Double= 0.0
-    private val places = listOf("plan","all","restaurant","museum","shopping","coffeeshop","park")
+    private val places = listOf("all","restaurant","museum","shopping","coffeeshop","park")
     private var adapter = PlacesAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -44,6 +44,11 @@ class MainFragment : Fragment() {
         }
         binding.setLocationEditTextClickListener {
             val action = MainFragmentDirections.actionMainFragmentToMapsFragment(latuitude.toFloat(),longitude.toFloat())
+            findNavController().navigate(action)
+        }
+
+        binding.showNote.setOnClickListener {
+            val action = MainFragmentDirections.actionMainFragmentToUserPlansFragment()
             findNavController().navigate(action)
         }
 
@@ -80,13 +85,8 @@ class MainFragment : Fragment() {
             val places = places[position]
             holder.bind(places)
             holder.itemView.setOnClickListener {
-                if(places.equals("plan")){
-                    val action = MainFragmentDirections.actionMainFragmentToUserPlansFragment()
-                    findNavController().navigate(action)
-                }else{
-                    val action = MainFragmentDirections.actionMainFragmentToRestaurantsApp(latuitude.toString(),longitude.toString(),places)
-                    findNavController().navigate(action)
-                }
+                val action = MainFragmentDirections.actionMainFragmentToRestaurantsApp(latuitude.toString(), longitude.toString(), places)
+                findNavController().navigate(action)
             }
         }
 

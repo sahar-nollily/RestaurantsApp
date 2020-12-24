@@ -1,9 +1,5 @@
 package com.bignerdranch.android.restaurantsapp.ui.restaurant
 
-import android.app.ProgressDialog
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,8 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bignerdranch.android.restaurantsapp.CheckNetwork
-import com.bignerdranch.android.restaurantsapp.ConnectivityLiveData
+import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentRestaurantsListBinding
 import com.bignerdranch.android.restaurantsapp.databinding.RestaurantListItemBinding
@@ -29,15 +24,10 @@ import com.bignerdranch.android.restaurantsapp.viewmodel.weather.WeatherViewMode
 import com.bignerdranch.android.restaurantsapp.viewmodel.weather.WeathersViewModel
 import com.bignerdranch.android.restaurantsapp.network.weather.Weather
 import com.bignerdranch.android.restaurantsapp.network.restaurants.Restaurant
-import com.bignerdranch.android.restaurantsapp.network.weather.WeatherCondition
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-
-
-const val RESTAURANT_API_KEY = "-U1bfntUuMZ-vKhJTY-Se2qgA85B5bl22meeTZcL0QP53prEaE3lgO2RW5Rg9cbrl19_pHdhrDkvdmDzm37Nk0U1atjEGWVHXn_1Uk7t1mI5lqb36b_c7ro0gZImXnYx"
-const val WEATHER_API_KEY = "803bb8a53fdd48baaa0113628201712"
 
 class RestaurantsListFragment : Fragment() {
 
@@ -163,7 +153,7 @@ class RestaurantsListFragment : Fragment() {
     }
 
     private fun getPlaces(places: String){
-        restaurantsViewModel.getRestaurants("Bearer $RESTAURANT_API_KEY",places, args.latitude, args.longitude).observe(viewLifecycleOwner,
+        restaurantsViewModel.getRestaurants("Bearer ${getString(R.string.RESTAURANT_API_KEY)}",places, args.latitude, args.longitude).observe(viewLifecycleOwner,
                 Observer{restaurants->
                     if(restaurants.isNotEmpty()){
                         adapter.setData(restaurants)
