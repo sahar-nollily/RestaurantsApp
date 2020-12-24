@@ -1,4 +1,4 @@
-package com.bignerdranch.android.restaurantsapp.ui.restaurant
+package com.bignerdranch.android.restaurantsapp.ui.place
 
 import android.os.Bundle
 import android.util.Log
@@ -16,33 +16,33 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
-import com.bignerdranch.android.restaurantsapp.databinding.FragmentRestaurantsListBinding
-import com.bignerdranch.android.restaurantsapp.databinding.RestaurantListItemBinding
-import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantViewModel
-import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantsViewModel
+import com.bignerdranch.android.restaurantsapp.databinding.FragmentPlacesListBinding
+import com.bignerdranch.android.restaurantsapp.databinding.PlaceListItemBinding
+import com.bignerdranch.android.restaurantsapp.network.places.Places
+import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlacesViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.weather.WeatherViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.weather.WeathersViewModel
 import com.bignerdranch.android.restaurantsapp.network.weather.Weather
-import com.bignerdranch.android.restaurantsapp.network.restaurants.Restaurant
+import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlaceViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 
-class RestaurantsListFragment : Fragment() {
+class PlacesListFragment : Fragment() {
 
-    val args by navArgs<RestaurantsListFragmentArgs>()
+    val args by navArgs<PlacesListFragmentArgs>()
 
-    private val restaurantsViewModel: RestaurantsViewModel by lazy {
-        ViewModelProvider(this).get(RestaurantsViewModel::class.java)
+    private val placesViewModel: PlacesViewModel by lazy {
+        ViewModelProvider(this).get(PlacesViewModel::class.java)
     }
 
     private val weathersViewModel: WeathersViewModel by lazy {
         ViewModelProvider(this).get(WeathersViewModel::class.java)
     }
 
-    private var adapter = RestaurantAdapter(emptyList())
-    private lateinit var binding: FragmentRestaurantsListBinding
+    private var adapter = PlaceAdapter(emptyList())
+    private lateinit var binding: FragmentPlacesListBinding
     private lateinit var checkNetwork: CheckNetwork
 
 
@@ -51,7 +51,7 @@ class RestaurantsListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
          binding = DataBindingUtil.inflate(inflater,
-            R.layout.fragment_restaurants_list,container,false)
+            R.layout.fragment_places_list,container,false)
 
         checkNetwork = CheckNetwork(context)
 
@@ -79,19 +79,19 @@ class RestaurantsListFragment : Fragment() {
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = this@RestaurantsListFragment.adapter
+            adapter = this@PlacesListFragment.adapter
         }
 
 
         return binding.root
     }
 
-    private inner class RestaurantHolder(private val binding: RestaurantListItemBinding): RecyclerView.ViewHolder(binding.root){
+    private inner class PlaceHolder(private val binding: PlaceListItemBinding): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(restaurant: Restaurant, weather:Weather){
-            binding.restaurantViewModel = RestaurantViewModel(restaurant)
+        fun bind(places: Places, weather:Weather){
+            binding.placeViewModel = PlaceViewModel(places)
             binding.weatherViewModel = WeatherViewModel(weather)
-            Glide.with(binding.imageView).load(restaurant.imageUrl).apply(
+            Glide.with(binding.imageView).load(places.imageUrl).apply(
                 RequestOptions().transforms(
                 CenterCrop(), RoundedCorners(20)
             )).into(binding.imageView)
@@ -102,32 +102,32 @@ class RestaurantsListFragment : Fragment() {
         }
     }
 
-    private inner class RestaurantAdapter(private var restaurant:List<Restaurant>):RecyclerView.Adapter<RestaurantHolder>(){
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RestaurantHolder {
-            val binding: RestaurantListItemBinding = DataBindingUtil.inflate(layoutInflater,
-                R.layout.restaurant_list_item,parent,false)
+    private inner class PlaceAdapter(private var places:List<Places>):RecyclerView.Adapter<PlaceHolder>(){
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceHolder {
+            val binding: PlaceListItemBinding = DataBindingUtil.inflate(layoutInflater,
+                R.layout.place_list_item,parent,false)
 
-            return RestaurantHolder(
+            return PlaceHolder(
                 binding
             )
         }
 
-        override fun getItemCount(): Int = restaurant.size
+        override fun getItemCount(): Int = places.size
 
-        override fun onBindViewHolder(holder: RestaurantHolder, position: Int) {
-            val restaurants = restaurant[position]
-            val latLng = "${restaurants.coordinates.latitude}, ${restaurants.coordinates.longitude}"
+        override fun onBindViewHolder(holder: PlaceHolder, position: Int) {
+            val place = places[position]
+            val latLng = "${place.coordinates.latitude}, ${place.coordinates.longitude}"
 
-            val weather = weathersViewModel.getWeather(restaurants.restaurantID).value
+            val weather = weathersViewModel.getWeather(place.placeID).value
 
             if(weather != null){
-                holder.bind(restaurants, weather)
+                holder.bind(place, weather)
             }
 
             holder.itemView.setOnClickListener {
                 val action =
-                    RestaurantsListFragmentDirections.actionRestaurantsAppToRestaurantsDetailFragment(
-                        restaurants.restaurantID,
+                    PlacesListFragmentDirections.actionRestaurantsAppToRestaurantsDetailFragment(
+                        place.placeID,
                         false,
                         latLng
                     )
@@ -135,8 +135,8 @@ class RestaurantsListFragment : Fragment() {
             }
         }
 
-         fun setData(restaurant: List<Restaurant>){
-            this.restaurant = restaurant
+         fun setData(restaurant: List<Places>){
+            this.places = restaurant
             notifyDataSetChanged()
         }
 
@@ -147,17 +147,17 @@ class RestaurantsListFragment : Fragment() {
     }
 
     private fun getDataWhenNoNetwork(){
-        restaurantsViewModel.getRestaurant().observe(viewLifecycleOwner, Observer{ adapter.setData(it)
+        placesViewModel.getPlace().observe(viewLifecycleOwner, Observer{ adapter.setData(it)
                     Log.d("TEST","********************************************************* no Internet")
                 })
     }
 
     private fun getPlaces(places: String){
-        restaurantsViewModel.getRestaurants("Bearer ${getString(R.string.RESTAURANT_API_KEY)}",places, args.latitude, args.longitude).observe(viewLifecycleOwner,
-                Observer{restaurants->
-                    if(restaurants.isNotEmpty()){
-                        adapter.setData(restaurants)
-                        Log.d("TEST","********************************************************* $restaurants")
+        placesViewModel.getPlaces("Bearer ${getString(R.string.RESTAURANT_API_KEY)}",places, args.latitude, args.longitude).observe(viewLifecycleOwner,
+                Observer{places->
+                    if(places.isNotEmpty()){
+                        adapter.setData(places)
+                        Log.d("TEST","********************************************************* $places")
                     }
                 })
     }

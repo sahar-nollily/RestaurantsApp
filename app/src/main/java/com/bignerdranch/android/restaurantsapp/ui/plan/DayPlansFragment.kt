@@ -18,10 +18,10 @@ import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentDayPlansBinding
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentUserPlansBinding
-import com.bignerdranch.android.restaurantsapp.network.restaurants.RestaurantDetail
+import com.bignerdranch.android.restaurantsapp.network.places.PlacesDetail
 import com.bignerdranch.android.restaurantsapp.util.SwipeController
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
-import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantDetailViewModel
+import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlaceDetailViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -36,7 +36,7 @@ class DayPlansFragment : Fragment() {
         ViewModelProvider(this).get(PlanViewModel::class.java)
     }
 
-    private var adapter = PlanAdapter(emptyList())
+    private var adapter = PlaceAdapter(emptyList())
     private lateinit var checkNetwork: CheckNetwork
 
     override fun onCreateView(
@@ -65,7 +65,7 @@ class DayPlansFragment : Fragment() {
         })
 
 
-        val item = object : SwipeController(requireContext(), 0, ItemTouchHelper.LEFT){
+        val item = object : SwipeController(0, ItemTouchHelper.LEFT){
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 adapter.deleteDate(viewHolder.adapterPosition)
             }
@@ -81,12 +81,12 @@ class DayPlansFragment : Fragment() {
         return binding.root
     }
 
-    private inner class PlanHolder(private val binding: FragmentDayPlansBinding): RecyclerView.ViewHolder(binding.root){
+    private inner class PlaceHolder(private val binding: FragmentDayPlansBinding): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(restaurantDetail: RestaurantDetail){
-            binding.restaurantDetailViewModel = RestaurantDetailViewModel(restaurantDetail)
+        fun bind(placesDetail: PlacesDetail){
+            binding.placeDetailViewModel = PlaceDetailViewModel(placesDetail)
             if(checkNetwork.isNetworkAvailable()){
-                Glide.with(binding.imageView).load(restaurantDetail.imageUrl).apply(
+                Glide.with(binding.imageView).load(placesDetail.imageUrl).apply(
                     RequestOptions().transforms(
                         CenterCrop(), RoundedCorners(20)
                     )).into(binding.imageView)
@@ -94,28 +94,28 @@ class DayPlansFragment : Fragment() {
         }
     }
 
-    private inner class PlanAdapter(private var plans: List<RestaurantDetail>): RecyclerView.Adapter<PlanHolder>(){
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanHolder {
+    private inner class PlaceAdapter(private var place: List<PlacesDetail>): RecyclerView.Adapter<PlaceHolder>(){
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceHolder {
             val binding: FragmentDayPlansBinding = DataBindingUtil.inflate(layoutInflater,
                 R.layout.fragment_day_plans,parent,false)
-            return PlanHolder(binding)
+            return PlaceHolder(binding)
         }
 
-        override fun getItemCount()= plans.size
-        override fun onBindViewHolder(holder: PlanHolder, position: Int) {
-            val plan = plans[position]
+        override fun getItemCount()= place.size
+        override fun onBindViewHolder(holder: PlaceHolder, position: Int) {
+            val plan = place[position]
             val latLng = "${plan.coordinates.latitude}, ${plan.coordinates.longitude}"
             holder.bind(plan)
 
             holder.itemView.setOnClickListener {
-                val action = DayPlansFragmentDirections.actionDayPlansFragmentToRestaurantsDetailFragment(plan.restaurantID,true,latLng)
+                val action = DayPlansFragmentDirections.actionDayPlansFragmentToRestaurantsDetailFragment(plan.placeID,true,latLng)
                 findNavController().navigate(action)
             }
 
         }
 
-        fun setDate(plans: List<RestaurantDetail>){
-            this.plans = plans
+        fun setDate(plans: List<PlacesDetail>){
+            this.place = plans
             notifyDataSetChanged()
         }
 
@@ -127,10 +127,10 @@ class DayPlansFragment : Fragment() {
 
                     }
                     .setPositiveButton("Ok") { dialoginterface, i ->
-                        val _plans = plans as MutableList
-                        planViewModel.deleteFavDetails(plans[position])
+                        val _plans = place as MutableList
+                        planViewModel.deleteFavDetails(place[position])
                         _plans.removeAt(position)
-                        this.plans = _plans
+                        this.place = _plans
                         notifyDataSetChanged()
                     }.show()
         }

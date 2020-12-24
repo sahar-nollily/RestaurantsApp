@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="restaurantDetailViewModel"
-            type="com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantDetailViewModel"/>
+            name="placeDetailViewModel"
+            type="com.bignerdranch.android.restaurantsapp.viewmodel.place.PlaceDetailViewModel"/>
     </data>
 
     <LinearLayout
@@ -29,7 +29,7 @@
                 android:layout_height="24dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="4dp"
-                android:text="@{restaurantDetailViewModel.name}"
+                android:text="@{placeDetailViewModel.name}"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:text="@{restaurantDetailViewModel.categories}"
+                android:text="@{placeDetailViewModel.categories}"
                 android:layout_marginTop="4dp"
                 android:textColor="@android:color/darker_gray"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -56,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:text="@{restaurantDetailViewModel.note}"
+                android:text="@{placeDetailViewModel.note}"
                 android:layout_marginTop="10dp"
                 android:textColor="@android:color/darker_gray"
                 app:layout_constraintStart_toEndOf="@+id/imageView"

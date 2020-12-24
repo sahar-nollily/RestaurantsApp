@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.restaurant.RestaurantsDetailFragment">
+    tools:context=".ui.place.PlaceDetailFragment">
 
     <data>
         <variable
-            name="restaurantDetailViewModel"
-            type="com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantDetailViewModel"/>
+            name="placeDetailViewModel"
+            type="com.bignerdranch.android.restaurantsapp.viewmodel.place.PlaceDetailViewModel"/>
     </data>
 
     <LinearLayout
@@ -45,7 +45,7 @@
             android:fontFamily="serif"
             android:paddingStart="20dp"
             android:layout_marginTop="10dp"
-            android:text="@{restaurantDetailViewModel.name}"
+            android:text="@{placeDetailViewModel.name}"
             android:textColor="#74D5F3"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
-            android:text="@{restaurantDetailViewModel.location}" />
+            android:text="@{placeDetailViewModel.location}" />
 
         <TextView
             android:id="@+id/restaurant_share_text_view"
@@ -83,7 +83,7 @@
             android:textSize="15sp"
             android:textColor="#4CAF50"
             android:textStyle="bold"
-            android:text="@{restaurantDetailViewModel.isClose()}"
+            android:text="@{placeDetailViewModel.isClose()}"
             android:gravity="end" />
         <TextView
             android:layout_width="match_parent"

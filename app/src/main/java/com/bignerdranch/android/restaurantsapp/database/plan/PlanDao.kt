@@ -2,7 +2,7 @@ package com.bignerdranch.android.restaurantsapp.database.plan
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.bignerdranch.android.restaurantsapp.network.restaurants.RestaurantDetail
+import com.bignerdranch.android.restaurantsapp.network.places.PlacesDetail
 
 @Dao
 interface PlanDao{
@@ -20,15 +20,15 @@ interface PlanDao{
     suspend fun deletePlan(plan: Plan)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addFavPlace(restaurantDetail: RestaurantDetail)
+    suspend fun addFavPlace(placesDetail: PlacesDetail)
 
-    @Query("SELECT * FROM RestaurantDetail WHERE planID =:planID ")
-    fun getFavPlace(planID: String): LiveData<List<RestaurantDetail>>
+    @Query("SELECT * FROM PlacesDetail WHERE planID =:planID ")
+    fun getFavPlace(planID: String): LiveData<List<PlacesDetail>>
 
-    @Query("SELECT * FROM RestaurantDetail WHERE restaurantID =:restaurantID ")
-    fun getFavDetails(restaurantID: String): LiveData<RestaurantDetail>
+    @Query("SELECT * FROM PlacesDetail WHERE placeID =:placeID ")
+    fun getFavDetails(placeID: String): LiveData<PlacesDetail>
 
     @Delete
-    suspend fun deleteFavDetails(restaurantDetail: RestaurantDetail)
+    suspend fun deleteFavDetails(placesDetail: PlacesDetail)
 
 }
