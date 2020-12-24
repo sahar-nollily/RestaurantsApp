@@ -39,7 +39,7 @@ class LogoActivity : AppCompatActivity() {
             val intent = Intent(this,MainActivity::class.java)
             finish()
             startActivity(intent)
-        }, 1900)
+        }, 2000)
 
 
 
