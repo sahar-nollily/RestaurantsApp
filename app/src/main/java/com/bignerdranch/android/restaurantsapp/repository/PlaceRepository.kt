@@ -4,6 +4,7 @@ import com.bignerdranch.android.restaurantsapp.database.places.PlaceDao
 import com.bignerdranch.android.restaurantsapp.network.places.PlaceApi
 import com.bignerdranch.android.restaurantsapp.data.Places
 import com.bignerdranch.android.restaurantsapp.data.PlacesDetail
+import com.bignerdranch.android.restaurantsapp.data.ReviewResponse
 import com.bignerdranch.android.restaurantsapp.data.Weather
 import com.bignerdranch.android.restaurantsapp.network.weather.WeatherApi
 import javax.inject.Inject
@@ -47,6 +48,10 @@ class PlaceRepository @Inject constructor(
 
     suspend fun placeDetails(placeId: String): PlacesDetail {
         return placeApi.placeDetails(placeId)
+    }
+
+    suspend fun placeReview(placeId: String): ReviewResponse {
+        return placeApi.placeReview(placeId)
     }
 
     private suspend fun deletePlace()=placeDao.deletePlace()

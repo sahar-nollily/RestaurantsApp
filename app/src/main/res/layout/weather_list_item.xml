@@ -15,7 +15,7 @@
         android:orientation="vertical"
         android:gravity="center"
         android:layout_margin="5dp"
-        android:padding="10dp"
+        android:padding="5dp"
         tools:layout_editor_absoluteX="160dp"
         tools:layout_editor_absoluteY="188dp">
 
@@ -23,12 +23,14 @@
             android:id="@+id/weather_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@{forecastWeatherViewModel.time}"/>
 
         <TextView
             android:id="@+id/weather_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@{forecastWeatherViewModel.weatherText}"/>
 
         <ImageView
@@ -40,12 +42,14 @@
             android:id="@+id/weather_temp_c"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@{forecastWeatherViewModel.temp_c}"/>
 
         <TextView
             android:id="@+id/weather_temp_f"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:text="@{forecastWeatherViewModel.temp_f}"/>
 
 

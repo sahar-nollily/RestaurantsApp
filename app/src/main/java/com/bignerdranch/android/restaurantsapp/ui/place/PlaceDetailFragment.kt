@@ -130,6 +130,7 @@ class PlaceDetailFragment : Fragment(), OnMapReadyCallback {
                     }
 
                 })
+
             }
 
             binding.restaurantShareTextView.setOnClickListener {
@@ -145,6 +146,11 @@ class PlaceDetailFragment : Fragment(), OnMapReadyCallback {
                 val intent = Intent(Intent.ACTION_DIAL)
                 intent.data = Uri.parse("tel:"+placesDetail.phone)
                 startActivity(intent)
+            }
+
+            binding.reviewTextView.setOnClickListener {
+                val action = PlaceDetailFragmentDirections.actionRestaurantsDetailFragmentToPlaceReviewFragment(args.restaurantId)
+                findNavController().navigate(action)
             }
 
         }
