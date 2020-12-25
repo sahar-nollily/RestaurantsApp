@@ -1,27 +1,31 @@
 package com.bignerdranch.android.restaurantsapp.ui.plan
 
+import android.app.AlertDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
+import com.bignerdranch.android.restaurantsapp.data.PlacesDetail
 import com.bignerdranch.android.restaurantsapp.data.Plan
+import com.bignerdranch.android.restaurantsapp.databinding.DialogAddNoteBinding
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentUserPlansBinding
 import com.bignerdranch.android.restaurantsapp.databinding.UserPlansItemBinding
+import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
+import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlacesViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlansViewModel
-import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlacesViewModel
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class UserPlansFragment : Fragment() {
@@ -75,6 +79,14 @@ class UserPlansFragment : Fragment() {
                 findNavController().navigate(action)
         }
 
+        if(args.CRUD == "add"){
+            val builder1 = AlertDialog.Builder(context)
+            builder1.setMessage("Pick Plan")
+            builder1.setCancelable(true)
+            val alert11 = builder1.create()
+            alert11.show()
+        }
+
         binding.recyclerView.apply {
             layoutManager = GridLayoutManager(context,2)
             adapter = this@UserPlansFragment.adapter
@@ -117,15 +129,13 @@ class UserPlansFragment : Fragment() {
                         if(args.CRUD == "add"){
                             val placeDetails = placesViewModel.placeDetails(args.placeID).value
                             if(placeDetails != null){
-                                placeDetails.placeID = args.placeID
-                                placeDetails.planID = plan.planID
-                                placeDetails.note = args.note
-                                planViewModel.addFavPlace(placeDetails)
+                                addNote(placeDetails, plan)
                             }
+                        }else{
+                            val action = UserPlansFragmentDirections.actionUserPlansFragmentToDayPlansFragment(plan)
+                            findNavController().navigate(action)
                         }
                     }
-                        val action = UserPlansFragmentDirections.actionUserPlansFragmentToDayPlansFragment(plan)
-                        findNavController().navigate(action)
                 }
             }
         }
@@ -135,6 +145,28 @@ class UserPlansFragment : Fragment() {
             notifyDataSetChanged()
         }
 
+    }
+
+    private fun addNote(
+        placeDetails: PlacesDetail,
+        plan: Plan
+    ) {
+        val dialogBuilder = AlertDialog.Builder(requireContext())
+        val binding: DialogAddNoteBinding = DataBindingUtil.inflate(layoutInflater,R.layout.dialog_add_note,null,false)
+        val dialogView = binding.root
+        dialogBuilder.setView(dialogView)
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
+        binding.addNoteButton.setOnClickListener {
+            val note = binding.noteEditText.text.toString()
+            placeDetails.placeID = args.placeID
+            placeDetails.planID = plan.planID
+            placeDetails.note = note
+            planViewModel.addFavPlace(placeDetails)
+            val action = UserPlansFragmentDirections.actionUserPlansFragmentToDayPlansFragment(plan)
+            findNavController().navigate(action)
+            alertDialog.dismiss()
+        }
     }
 
 }

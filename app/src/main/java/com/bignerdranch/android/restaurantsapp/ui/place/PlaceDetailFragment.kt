@@ -91,7 +91,8 @@ class PlaceDetailFragment : Fragment(), OnMapReadyCallback {
                     })
                 binding.favPlace.visibility = View.VISIBLE
                 binding.favPlace.setOnClickListener {
-                    addNote()
+                    val action = PlaceDetailFragmentDirections.actionRestaurantsDetailFragmentToUserPlansFragment("add",args.restaurantId)
+                    findNavController().navigate(action)
                 }
             }
 
@@ -185,21 +186,6 @@ class PlaceDetailFragment : Fragment(), OnMapReadyCallback {
             holder.bind(image)
         }
 
-    }
-
-    private fun addNote(){
-        val dialogBuilder = AlertDialog.Builder(requireContext())
-        val binding: DialogAddNoteBinding = DataBindingUtil.inflate(layoutInflater,R.layout.dialog_add_note,null,false)
-        val dialogView = binding.root
-        dialogBuilder.setView(dialogView)
-        val alertDialog = dialogBuilder.create()
-        alertDialog.show()
-        binding.addNoteButton.setOnClickListener {
-            val note = binding.noteEditText.text.toString()
-            val action = PlaceDetailFragmentDirections.actionRestaurantsDetailFragmentToUserPlansFragment("add",args.restaurantId,note)
-            findNavController().navigate(action)
-            alertDialog.dismiss()
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

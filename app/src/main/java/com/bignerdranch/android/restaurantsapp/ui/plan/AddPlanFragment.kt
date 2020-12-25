@@ -17,12 +17,14 @@ import com.bignerdranch.android.restaurantsapp.data.Plan
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentAddPlanBinding
 import com.bignerdranch.android.restaurantsapp.ui.DatePickerFragment
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.DateFormat
 import java.util.*
 
 private const val REQUEST_DATE = 0
 private const val DIALOG_DATE = "DialogDate"
 
+@AndroidEntryPoint
 class AddPlanFragment : Fragment() , DatePickerFragment.Callbacks{
 
     private val args by navArgs<AddPlanFragmentArgs>()
