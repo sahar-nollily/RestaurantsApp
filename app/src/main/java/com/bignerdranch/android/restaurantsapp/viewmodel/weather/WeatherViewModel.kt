@@ -1,7 +1,6 @@
 package com.bignerdranch.android.restaurantsapp.viewmodel.weather
 
 import androidx.databinding.BaseObservable
-import com.bignerdranch.android.restaurantsapp.Yelp.Restaurant
 import com.bignerdranch.android.restaurantsapp.weather.Weather
 
 class WeatherViewModel (

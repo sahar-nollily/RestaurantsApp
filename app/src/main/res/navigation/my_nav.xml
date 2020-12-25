@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_nav"
-    app:startDestination="@id/mapsFragment">
+    app:startDestination="@id/mainFragment">
 
     <fragment
         android:id="@+id/restaurantsApp"
@@ -16,14 +16,37 @@
         <argument
             android:name="longitude"
             app:argType="string" />
+        <argument
+            android:name="places"
+            app:argType="string"
+            android:defaultValue="all" />
+
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="com.bignerdranch.android.restaurantsapp.MapsFragment"
+        android:name="com.bignerdranch.android.restaurantsapp.ui.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps" >
+        <argument
+            android:name="latitude"
+            app:argType="float" />
+        <argument
+            android:name="longitude"
+            app:argType="float" />
         <action
-            android:id="@+id/action_mapsFragment_to_restaurantsApp"
+            android:id="@+id/action_mapsFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.bignerdranch.android.restaurantsapp.ui.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_restaurantsApp"
             app:destination="@id/restaurantsApp" />
     </fragment>
 </navigation>

@@ -1,7 +1,7 @@
 package com.bignerdranch.android.restaurantsapp.database
 
 import androidx.room.TypeConverter
-import com.bignerdranch.android.restaurantsapp.Yelp.YelpCategory
+import com.bignerdranch.android.restaurantsapp.yelp.YelpCategory
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

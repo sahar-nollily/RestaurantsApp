@@ -2,11 +2,11 @@ package com.bignerdranch.android.restaurantsapp
 
 import android.content.Context
 import androidx.room.Room
-import com.bignerdranch.android.restaurantsapp.Yelp.YelpApi
-import com.bignerdranch.android.restaurantsapp.Yelp.YelpRepository
+import com.bignerdranch.android.restaurantsapp.yelp.YelpApi
+import com.bignerdranch.android.restaurantsapp.repository.YelpRepository
 import com.bignerdranch.android.restaurantsapp.database.RestaurantDatabase
 import com.bignerdranch.android.restaurantsapp.weather.WeatherApi
-import com.bignerdranch.android.restaurantsapp.weather.WeatherRepository
+import com.bignerdranch.android.restaurantsapp.repository.WeatherRepository
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
