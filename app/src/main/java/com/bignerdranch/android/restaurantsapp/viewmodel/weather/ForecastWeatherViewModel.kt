@@ -1,7 +1,7 @@
 package com.bignerdranch.android.restaurantsapp.viewmodel.weather
 
 import androidx.databinding.BaseObservable
-import com.bignerdranch.android.restaurantsapp.weather.Forecast
+import com.bignerdranch.android.restaurantsapp.network.weather.Forecast
 
 class ForecastWeatherViewModel (
     forecast: Forecast

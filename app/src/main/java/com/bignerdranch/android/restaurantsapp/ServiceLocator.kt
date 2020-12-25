@@ -2,10 +2,11 @@ package com.bignerdranch.android.restaurantsapp
 
 import android.content.Context
 import androidx.room.Room
-import com.bignerdranch.android.restaurantsapp.yelp.YelpApi
+import com.bignerdranch.android.restaurantsapp.network.restaurants.YelpApi
 import com.bignerdranch.android.restaurantsapp.repository.YelpRepository
-import com.bignerdranch.android.restaurantsapp.database.RestaurantDatabase
-import com.bignerdranch.android.restaurantsapp.weather.WeatherApi
+import com.bignerdranch.android.restaurantsapp.database.AppDatabase
+import com.bignerdranch.android.restaurantsapp.network.weather.WeatherApi
+import com.bignerdranch.android.restaurantsapp.repository.PlanRepository
 import com.bignerdranch.android.restaurantsapp.repository.WeatherRepository
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,14 +17,14 @@ object ServiceLocator {
     private lateinit var weatherRetrofit: Retrofit
     private lateinit var yelpApi: YelpApi
     private lateinit var weatherApi: WeatherApi
-    private lateinit var restaurantDatabase: RestaurantDatabase
+    private lateinit var restaurantDatabase: AppDatabase
 
 
     fun init(app: App) {
         this.app = app
         initializeYelpNetwork()
         initializeWeatherNetwork()
-        initializeDatabase(app)
+        initializeYelpDatabase(app)
     }
 
     private fun initializeYelpNetwork() {
@@ -46,20 +47,23 @@ object ServiceLocator {
 
     }
 
-    private fun initializeDatabase(context: Context) {
+    private fun initializeYelpDatabase(context: Context) {
         restaurantDatabase = Room.databaseBuilder(
             context,
-            RestaurantDatabase::class.java,
+            AppDatabase::class.java,
             "restaurant_db"
         ).build()
     }
-
 
     val yelpRepository: YelpRepository by lazy {
         YelpRepository(yelpApi, restaurantDatabase.restaurantDao())
     }
 
     val weatherRepository: WeatherRepository by lazy {
-        WeatherRepository(weatherApi)
+        WeatherRepository(weatherApi, restaurantDatabase.weatherDao())
+    }
+
+    val planRepository: PlanRepository by lazy {
+        PlanRepository(restaurantDatabase.planDao())
     }
 }

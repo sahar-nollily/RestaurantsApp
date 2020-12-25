@@ -5,9 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bignerdranch.android.restaurantsapp.ServiceLocator
-import com.bignerdranch.android.restaurantsapp.yelp.PlacesLocation
-import com.bignerdranch.android.restaurantsapp.yelp.Restaurant
-import com.bignerdranch.android.restaurantsapp.yelp.RestaurantDetail
+import com.bignerdranch.android.restaurantsapp.network.restaurants.Restaurant
+import com.bignerdranch.android.restaurantsapp.network.restaurants.RestaurantDetail
 import kotlinx.coroutines.launch
 
 class RestaurantsViewModel : ViewModel(){

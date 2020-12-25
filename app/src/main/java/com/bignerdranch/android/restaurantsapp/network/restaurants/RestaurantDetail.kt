@@ -1,4 +1,4 @@
-package com.bignerdranch.android.restaurantsapp.yelp
+package com.bignerdranch.android.restaurantsapp.network.restaurants
 
 data class RestaurantDetail(
     val name : String,

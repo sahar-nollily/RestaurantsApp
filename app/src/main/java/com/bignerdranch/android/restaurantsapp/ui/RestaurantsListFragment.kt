@@ -13,10 +13,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bignerdranch.android.restaurantsapp.ConnectivityLiveData
 import com.bignerdranch.android.restaurantsapp.R
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentRestaurantsListBinding
 import com.bignerdranch.android.restaurantsapp.databinding.RestaurantListItemBinding
@@ -24,8 +27,8 @@ import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantVi
 import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantsViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.weather.WeatherViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.weather.WeathersViewModel
-import com.bignerdranch.android.restaurantsapp.weather.Weather
-import com.bignerdranch.android.restaurantsapp.yelp.Restaurant
+import com.bignerdranch.android.restaurantsapp.network.weather.Weather
+import com.bignerdranch.android.restaurantsapp.network.restaurants.Restaurant
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -46,55 +49,62 @@ class RestaurantsListFragment : Fragment() {
     private val weathersViewModel: WeathersViewModel by lazy {
         ViewModelProvider(this).get(WeathersViewModel::class.java)
     }
+
     private var adapter = RestaurantAdapter(emptyList())
+    private lateinit var binding: FragmentRestaurantsListBinding
+    private lateinit var connectivityLiveData: ConnectivityLiveData
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding: FragmentRestaurantsListBinding = DataBindingUtil.inflate(inflater,
+         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_restaurants_list,container,false)
-        if(isNetworkAvailable()){
-            getPlaces(args.places)
-            Log.d("TEST","********************************************************* there is an Internet")
-            print("********************************************************* there is an Internet")
 
-        }
-        else{
-            restaurantsViewModel.getRestaurant().observe(viewLifecycleOwner,
-                    Observer{
-                        adapter.setData(it)
-                    }
-            )
-            Log.d("TEST","********************************************************* no Internet")
-            print("********************************************************* no Internet")
-        }
+        connectivityLiveData= ConnectivityLiveData(requireActivity().application)
+        connectivityLiveData.observe(viewLifecycleOwner, Observer {isAvailable->
+            when(isAvailable)
+            {
+                true-> binding.noConnection.visibility = View.GONE
 
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = this@RestaurantsListFragment.adapter
+                false-> binding.noConnection.visibility = View.VISIBLE
+
+            }
+        })
+
+        if (isNetworkAvailable()){
+            getDataWhenNetworkAvailable()
+        }else{
+            getDataWhenNoNetwork()
         }
 
         binding.locationSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (query != null) {
+                if (isNetworkAvailable()){
                     getPlaces("${args.places} $query" )
                 }
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null) {
-                    getPlaces("${args.places} $newText")
+                if (isNetworkAvailable()){
+                    getPlaces("${args.places} $newText" )
                 }
                 return true
             }
         })
 
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = this@RestaurantsListFragment.adapter
+        }
+
+
         return binding.root
     }
 
-    inner private class RestaurantHolder(private val binding: RestaurantListItemBinding): RecyclerView.ViewHolder(binding.root){
+    private inner class RestaurantHolder(private val binding: RestaurantListItemBinding): RecyclerView.ViewHolder(binding.root){
 
         fun bind(restaurant: Restaurant, weather:Weather){
             binding.restaurantViewModel = RestaurantViewModel(restaurant)
@@ -107,7 +117,6 @@ class RestaurantsListFragment : Fragment() {
                     RequestOptions().transforms(
                             CenterCrop(), RoundedCorners(20)
                     )).into(binding.icConditionTextView)
-
         }
     }
 
@@ -126,10 +135,32 @@ class RestaurantsListFragment : Fragment() {
         override fun onBindViewHolder(holder: RestaurantHolder, position: Int) {
             val restaurants = restaurant[position]
             val latLng = "${restaurants.coordinates.latitude}, ${restaurants.coordinates.longitude}"
-            val weather = weathersViewModel.getWeather(WEATHER_API_KEY,latLng).value
-            if (weather != null) {
-                holder.bind(restaurants, weather)
+            when(isNetworkAvailable()){
+                true ->{
+                    weathersViewModel.getWeather(WEATHER_API_KEY,latLng).observe(viewLifecycleOwner,
+                        Observer {
+                                it.weatherID = restaurants.restaurantID
+                                weathersViewModel.addWeather(it)
+                                holder.bind(restaurants, it)
+                        })
+                }
+                false ->{
+                    weathersViewModel.getWeather(restaurants.restaurantID).observe(viewLifecycleOwner,
+                        Observer {
+                            if(it != null){
+                                holder.bind(restaurants, it)
+                            }
+                        })
+                }
             }
+
+//            weathersViewModel.getWeather(restaurants.restaurantID).observe(viewLifecycleOwner,
+//                Observer {
+//                    if(it != null){
+//                        holder.bind(restaurants, it)
+//                    }
+//                })
+
             holder.itemView.setOnClickListener {
                 val action = RestaurantsListFragmentDirections.actionRestaurantsAppToRestaurantsDetailFragment(restaurants.restaurantID, latLng)
                 findNavController().navigate(action)
@@ -151,12 +182,34 @@ class RestaurantsListFragment : Fragment() {
         } else false
     }
 
+    private fun getDataWhenNetworkAvailable(){
+        getPlaces(args.places)
+    }
+
+    private fun getDataWhenNoNetwork(){
+        restaurantsViewModel.getRestaurant().observe(viewLifecycleOwner, Observer{ adapter.setData(it)
+                    Log.d("TEST","********************************************************* no Internet")
+                })
+    }
+
     private fun getPlaces(places: String){
         restaurantsViewModel.getRestaurants("Bearer $RESTAURANT_API_KEY",places, args.latitude, args.longitude).observe(viewLifecycleOwner,
-                Observer{
-                    if(it.isNotEmpty()){
-                        adapter.setData(it)
-                        Log.d("TEST","********************************************************* $it")
+                Observer{restaurants->
+                    if(restaurants.isNotEmpty()){
+//                        for(i in 0 until restaurants.size){
+//                            val latLng = "${restaurants[i].coordinates.latitude}, ${restaurants[i].coordinates.longitude}"
+//                                    weathersViewModel.getWeather(WEATHER_API_KEY,latLng).observe(viewLifecycleOwner,
+//                                        Observer {
+//                                            if(it != null){
+//                                                it.weatherID = restaurants[i].restaurantID
+//                                                weathersViewModel.addWeather(it)
+//                                            }
+//                                        })
+//                            Log.d("TEST","********************************************************* Done")
+//
+//                        }
+                        adapter.setData(restaurants)
+                        Log.d("TEST","********************************************************* $restaurants")
                     }
                 })
     }

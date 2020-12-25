@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bignerdranch.android.restaurantsapp.ServiceLocator
-import com.bignerdranch.android.restaurantsapp.weather.Forecast
-import com.bignerdranch.android.restaurantsapp.weather.Weather
+import com.bignerdranch.android.restaurantsapp.network.weather.Forecast
+import com.bignerdranch.android.restaurantsapp.network.weather.Weather
 import kotlinx.coroutines.launch
 
 class WeathersViewModel : ViewModel(){
@@ -14,6 +14,12 @@ class WeathersViewModel : ViewModel(){
     var weather = MutableLiveData<Weather>()
     var forecast = MutableLiveData<List<Forecast>>()
 
+     fun getWeather(weatherID: String): LiveData<Weather>{
+        viewModelScope.launch {
+            weather.value = weatherRepository.getWeather(weatherID)
+        }
+        return weather
+    }
 
     fun getWeather(key: String,latLon: String): LiveData<Weather> {
         viewModelScope.launch{
@@ -27,5 +33,11 @@ class WeathersViewModel : ViewModel(){
             forecast.value = weatherRepository.getForecast(key, latLon, days, index)
         }
         return forecast
+    }
+
+     fun addWeather(weather: Weather){
+         viewModelScope.launch {
+             weatherRepository.addWeather(weather)
+         }
     }
 }
