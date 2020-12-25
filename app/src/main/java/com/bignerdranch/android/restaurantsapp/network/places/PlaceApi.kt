@@ -1,4 +1,4 @@
-package com.bignerdranch.android.restaurantsapp.network.restaurants
+package com.bignerdranch.android.restaurantsapp.network.places
 
 import com.bignerdranch.android.restaurantsapp.network.weather.WeatherResponse
 import retrofit2.http.GET
@@ -6,17 +6,17 @@ import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface YelpApi{
+interface PlaceApi{
 
     @GET("businesses/search")
-    suspend fun getRestaurants(@Header("Authorization") authorization: String,
+    suspend fun getPlaces(@Header("Authorization") authorization: String,
                                @Query("term") term: String,
                                @Query("latitude") latitude: String,
-                               @Query("longitude") longitude: String): YelpResponse
+                               @Query("longitude") longitude: String): PlaceResponse
 
     @GET("businesses/{id}")
-    suspend fun restaurantDetails(@Header("Authorization") authorization: String,
-                                  @Path("id")restaurantId: String): RestaurantDetail
+    suspend fun placeDetails(@Header("Authorization") authorization: String,
+                                  @Path("id")placeId: String): PlacesDetail
 
     @GET("current.json")
     suspend fun getWeather(@Query("key") key: String,

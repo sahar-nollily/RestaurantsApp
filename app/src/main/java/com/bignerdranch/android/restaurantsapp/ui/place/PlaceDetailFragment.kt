@@ -1,4 +1,4 @@
-package com.bignerdranch.android.restaurantsapp.ui.restaurant
+package com.bignerdranch.android.restaurantsapp.ui.place
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -21,14 +21,14 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
 import com.bignerdranch.android.restaurantsapp.databinding.DialogAddNoteBinding
-import com.bignerdranch.android.restaurantsapp.databinding.FragmentRestaurantsDetailBinding
+import com.bignerdranch.android.restaurantsapp.databinding.FragmentPlaceDetailBinding
 import com.bignerdranch.android.restaurantsapp.databinding.ViewPagerItemBinding
 import com.bignerdranch.android.restaurantsapp.databinding.WeatherListItemBinding
-import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantDetailViewModel
-import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantsViewModel
+import com.bignerdranch.android.restaurantsapp.network.places.PlacesDetail
+import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlaceDetailViewModel
+import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlacesViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.weather.ForecastWeatherViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.weather.WeathersViewModel
-import com.bignerdranch.android.restaurantsapp.network.restaurants.RestaurantDetail
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -44,12 +44,12 @@ import com.google.android.gms.maps.model.MarkerOptions
 import java.text.SimpleDateFormat
 import java.util.*
 
-class RestaurantsDetailFragment : Fragment(), OnMapReadyCallback {
+class PlaceDetailFragment : Fragment(), OnMapReadyCallback {
 
-    val args by navArgs<RestaurantsDetailFragmentArgs>()
+    val args by navArgs<PlaceDetailFragmentArgs>()
 
-    private val restaurantsViewModel: RestaurantsViewModel by lazy {
-        ViewModelProvider(this).get(RestaurantsViewModel::class.java)
+    private val placesViewModel: PlacesViewModel by lazy {
+        ViewModelProvider(this).get(PlacesViewModel::class.java)
     }
 
     private val weathersViewModel: WeathersViewModel by lazy {
@@ -60,7 +60,7 @@ class RestaurantsDetailFragment : Fragment(), OnMapReadyCallback {
         ViewModelProvider(this).get(PlanViewModel::class.java)
     }
 
-    private lateinit var restaurantDetail: RestaurantDetail
+    private lateinit var placesDetail: PlacesDetail
     private lateinit var weatherBinding:WeatherListItemBinding
     private lateinit var checkNetwork: CheckNetwork
 
@@ -68,16 +68,16 @@ class RestaurantsDetailFragment : Fragment(), OnMapReadyCallback {
     @SuppressLint("SimpleDateFormat")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val binding : FragmentRestaurantsDetailBinding = DataBindingUtil.inflate(inflater,
-            R.layout.fragment_restaurants_detail, container, false)
+        val binding : FragmentPlaceDetailBinding = DataBindingUtil.inflate(inflater,
+            R.layout.fragment_place_detail, container, false)
 
         checkNetwork = CheckNetwork(context)
 
         if(args.isSave || checkNetwork.isNetworkAvailable()){
             if(args.isSave){
                 planViewModel.getFavDetails(args.restaurantId).observe(viewLifecycleOwner, Observer {
-                restaurantDetail = it
-                    binding.restaurantDetailViewModel = RestaurantDetailViewModel(it)
+                    placesDetail = it
+                    binding.placeDetailViewModel = PlaceDetailViewModel(it)
                     binding.viewPager.adapter= ImageAdapter(it.photos)
                     binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
                     binding.indicator.setViewPager(binding.viewPager)
@@ -85,10 +85,10 @@ class RestaurantsDetailFragment : Fragment(), OnMapReadyCallback {
                 binding.favPlace.visibility = View.GONE
             }
             else{
-                restaurantsViewModel.restaurantDetails("Bearer ${getString(R.string.RESTAURANT_API_KEY)}",args.restaurantId).observe(viewLifecycleOwner,
+                placesViewModel.placeDetails("Bearer ${getString(R.string.RESTAURANT_API_KEY)}",args.restaurantId).observe(viewLifecycleOwner,
                     Observer {
-                        restaurantDetail = it
-                        binding.restaurantDetailViewModel = RestaurantDetailViewModel(it)
+                        placesDetail = it
+                        binding.placeDetailViewModel = PlaceDetailViewModel(it)
                         binding.viewPager.adapter= ImageAdapter(it.photos)
                         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
                         binding.indicator.setViewPager(binding.viewPager)
@@ -141,13 +141,13 @@ class RestaurantsDetailFragment : Fragment(), OnMapReadyCallback {
                     .from(requireActivity())
                     .setType("text/plain")
                     .setChooserTitle("Share this text with: ")
-                    .setText("Look to this beautiful place ${restaurantDetail.url}")
+                    .setText("Look to this beautiful place ${placesDetail.url}")
                     .startChooser();
             }
 
             binding.restaurantPhoneTextView.setOnClickListener {
                 val intent = Intent(Intent.ACTION_DIAL)
-                intent.data = Uri.parse("tel:"+restaurantDetail.phone)
+                intent.data = Uri.parse("tel:"+placesDetail.phone)
                 startActivity(intent)
             }
 
@@ -194,7 +194,7 @@ class RestaurantsDetailFragment : Fragment(), OnMapReadyCallback {
         alertDialog.show()
         binding.addNoteButton.setOnClickListener {
             val note = binding.noteEditText.text.toString()
-            val action = RestaurantsDetailFragmentDirections.actionRestaurantsDetailFragmentToUserPlansFragment("add",args.restaurantId,note)
+            val action = PlaceDetailFragmentDirections.actionRestaurantsDetailFragmentToUserPlansFragment("add",args.restaurantId,note)
             findNavController().navigate(action)
             alertDialog.dismiss()
         }
@@ -209,9 +209,9 @@ class RestaurantsDetailFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(p0: GoogleMap?) {
         p0?.setOnMapClickListener{
-            if(::restaurantDetail.isInitialized){
-                val restaurantLocation = LatLng(restaurantDetail.coordinates.latitude,restaurantDetail.coordinates.longitude)
-                p0.addMarker(MarkerOptions().position(restaurantLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker)).title(restaurantDetail.name))
+            if(::placesDetail.isInitialized){
+                val restaurantLocation = LatLng(placesDetail.coordinates.latitude,placesDetail.coordinates.longitude)
+                p0.addMarker(MarkerOptions().position(restaurantLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker)).title(placesDetail.name))
                 p0.animateCamera(CameraUpdateFactory.newLatLngZoom(restaurantLocation, 14F))
             }else{
                 Toast.makeText(requireContext(),getString(R.string.toast_no_Internet),Toast.LENGTH_LONG).show()

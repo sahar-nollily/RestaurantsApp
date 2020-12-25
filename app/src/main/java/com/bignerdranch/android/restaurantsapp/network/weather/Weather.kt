@@ -4,12 +4,12 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
-import com.bignerdranch.android.restaurantsapp.network.restaurants.Restaurant
+import com.bignerdranch.android.restaurantsapp.network.places.Places
 
 
 @Entity(foreignKeys = [ForeignKey(
-        entity = Restaurant::class,
-        parentColumns = arrayOf("restaurantID"),
+        entity = Places::class,
+        parentColumns = arrayOf("placeID"),
         childColumns = arrayOf("weatherID"),
         onDelete = CASCADE)])
 data class Weather(

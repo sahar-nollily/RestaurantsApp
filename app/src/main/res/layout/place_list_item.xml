@@ -8,8 +8,8 @@
             name="weatherViewModel"
             type="com.bignerdranch.android.restaurantsapp.viewmodel.weather.WeatherViewModel" />
         <variable
-            name="restaurantViewModel"
-            type="com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantViewModel" />
+            name="placeViewModel"
+            type="com.bignerdranch.android.restaurantsapp.viewmodel.place.PlaceViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +21,7 @@
             android:layout_height="24dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="4dp"
-            android:text="@{restaurantViewModel.name}"
+            android:text="@{placeViewModel.name}"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -40,7 +40,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="4dp"
             android:numStars="5"
-            android:rating="@{restaurantViewModel.rating}"
+            android:rating="@{placeViewModel.rating}"
             android:stepSize="0.5"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toBottomOf="@+id/restaurant_category_text_view" />
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:text="@{restaurantViewModel.categories}"
+            android:text="@{placeViewModel.categories}"
             android:layout_marginTop="4dp"
             android:textColor="@android:color/darker_gray"
             app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="4dp"
-            android:text="@{restaurantViewModel.distanceInMeters}"
+            android:text="@{placeViewModel.distanceInMeters}"
             android:textColor="@android:color/darker_gray"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toBottomOf="@+id/restaurant_rate" />

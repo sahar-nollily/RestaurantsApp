@@ -2,8 +2,8 @@ package com.bignerdranch.android.restaurantsapp
 
 import android.content.Context
 import androidx.room.Room
-import com.bignerdranch.android.restaurantsapp.network.restaurants.YelpApi
-import com.bignerdranch.android.restaurantsapp.repository.YelpRepository
+import com.bignerdranch.android.restaurantsapp.network.places.PlaceApi
+import com.bignerdranch.android.restaurantsapp.repository.PlaceRepository
 import com.bignerdranch.android.restaurantsapp.database.AppDatabase
 import com.bignerdranch.android.restaurantsapp.network.weather.WeatherApi
 import com.bignerdranch.android.restaurantsapp.repository.PlanRepository
@@ -15,7 +15,7 @@ object ServiceLocator {
     private lateinit var app: App
     private lateinit var yelpRetrofit: Retrofit
     private lateinit var weatherRetrofit: Retrofit
-    private lateinit var yelpApi: YelpApi
+    private lateinit var placeApi: PlaceApi
     private lateinit var weatherApi: WeatherApi
     private lateinit var appDatabase: AppDatabase
 
@@ -33,7 +33,7 @@ object ServiceLocator {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        yelpApi = yelpRetrofit.create(YelpApi::class.java)
+        placeApi = yelpRetrofit.create(PlaceApi::class.java)
 
     }
 
@@ -51,12 +51,12 @@ object ServiceLocator {
         appDatabase = Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            "restaurant_db"
+            "place_db"
         ).build()
     }
 
-    val yelpRepository: YelpRepository by lazy {
-        YelpRepository(yelpApi, appDatabase.restaurantDao(),weatherApi)
+    val placeRepository: PlaceRepository by lazy {
+        PlaceRepository(placeApi, appDatabase.placeDao(),weatherApi)
     }
 
     val weatherRepository: WeatherRepository by lazy {

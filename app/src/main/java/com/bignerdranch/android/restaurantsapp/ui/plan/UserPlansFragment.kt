@@ -20,7 +20,7 @@ import com.bignerdranch.android.restaurantsapp.databinding.FragmentUserPlansBind
 import com.bignerdranch.android.restaurantsapp.databinding.UserPlansItemBinding
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlansViewModel
-import com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantsViewModel
+import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlacesViewModel
 
 
 class UserPlansFragment : Fragment() {
@@ -31,8 +31,8 @@ class UserPlansFragment : Fragment() {
         ViewModelProvider(this).get(PlanViewModel::class.java)
     }
 
-    private val restaurantsViewModel: RestaurantsViewModel by lazy {
-        ViewModelProvider(this).get(RestaurantsViewModel::class.java)
+    private val placesViewModel: PlacesViewModel by lazy {
+        ViewModelProvider(this).get(PlacesViewModel::class.java)
     }
 
     private var adapter = PlanAdapter(emptyList())
@@ -118,9 +118,9 @@ class UserPlansFragment : Fragment() {
                 holder.itemView.setOnClickListener {
                     if(checkNetwork.isNetworkAvailable()){
                         if(args.CRUD == "add"){
-                            val restaurantDetails = restaurantsViewModel.restaurantDetails("Bearer ${getString(R.string.RESTAURANT_API_KEY)}",args.placeID).value
+                            val restaurantDetails = placesViewModel.placeDetails("Bearer ${getString(R.string.RESTAURANT_API_KEY)}",args.placeID).value
                             if(restaurantDetails != null){
-                                restaurantDetails.restaurantID = args.placeID
+                                restaurantDetails.placeID = args.placeID
                                 restaurantDetails.planID = plan.planID
                                 restaurantDetails.note = args.note
                                 planViewModel.addFavPlace(restaurantDetails)

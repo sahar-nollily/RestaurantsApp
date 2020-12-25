@@ -1,26 +1,26 @@
 package com.bignerdranch.android.restaurantsapp.database
 
 import androidx.room.TypeConverter
-import com.bignerdranch.android.restaurantsapp.network.restaurants.PlacesLocation
-import com.bignerdranch.android.restaurantsapp.network.restaurants.RestaurantLocation
-import com.bignerdranch.android.restaurantsapp.network.restaurants.YelpCategory
+import com.bignerdranch.android.restaurantsapp.network.places.Category
+import com.bignerdranch.android.restaurantsapp.network.places.PlacesLocation
+import com.bignerdranch.android.restaurantsapp.network.places.RestaurantLocation
 import com.bignerdranch.android.restaurantsapp.network.weather.WeatherCondition
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class AppTypeConverters {
     @TypeConverter
-    fun fromList(title: List<YelpCategory>): String {
+    fun fromList(title: List<Category>): String {
         val gson = Gson()
-        val type = object : TypeToken<List<YelpCategory>>() {}.type
+        val type = object : TypeToken<List<Category>>() {}.type
         return gson.toJson(title, type)
     }
 
     @TypeConverter
-    fun toList(title: String): List<YelpCategory> {
+    fun toList(title: String): List<Category> {
         val gson = Gson()
-        val type = object : TypeToken<List<YelpCategory>>() {}.type
-        return gson.fromJson<List<YelpCategory>>(title, type)
+        val type = object : TypeToken<List<Category>>() {}.type
+        return gson.fromJson<List<Category>>(title, type)
     }
 
     @TypeConverter

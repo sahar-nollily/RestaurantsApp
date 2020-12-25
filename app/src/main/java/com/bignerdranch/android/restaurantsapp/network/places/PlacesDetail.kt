@@ -1,4 +1,4 @@
-package com.bignerdranch.android.restaurantsapp.network.restaurants
+package com.bignerdranch.android.restaurantsapp.network.places
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -11,8 +11,8 @@ import com.google.gson.annotations.SerializedName
         parentColumns = arrayOf("planID"),
         childColumns = arrayOf("planID"),
         onDelete = ForeignKey.CASCADE)])
-data class RestaurantDetail(
-    @PrimaryKey @SerializedName("id") var restaurantID: String,
+data class PlacesDetail(
+    @PrimaryKey @SerializedName("id") var placeID: String,
     var planID: Int= 0,
     val name : String= "",
     val is_closed: Boolean= false,
@@ -20,7 +20,7 @@ data class RestaurantDetail(
     val phone: String= "",
     val url: String= "",
     val coordinates: PlacesLocation,
-    val categories: List<YelpCategory>,
+    val categories: List<Category>,
     var note: String= "",
     @SerializedName("image_url") val imageUrl: String= "",
     val photos: List<String>){

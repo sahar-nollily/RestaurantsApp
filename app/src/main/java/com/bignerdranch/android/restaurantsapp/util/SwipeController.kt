@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
 
-abstract class SwipeController(context: Context, dragDirections: Int, swipeDirections: Int)
+abstract class SwipeController(dragDirections: Int, swipeDirections: Int)
     : ItemTouchHelper.SimpleCallback(dragDirections,swipeDirections) {
 
     override fun onMove(

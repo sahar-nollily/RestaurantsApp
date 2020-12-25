@@ -2,13 +2,13 @@ package com.bignerdranch.android.restaurantsapp.repository
 
 import com.bignerdranch.android.restaurantsapp.database.plan.Plan
 import com.bignerdranch.android.restaurantsapp.database.plan.PlanDao
-import com.bignerdranch.android.restaurantsapp.network.restaurants.RestaurantDetail
+import com.bignerdranch.android.restaurantsapp.network.places.PlacesDetail
 
 class PlanRepository (private val planDao: PlanDao){
 
     val getPlan = planDao.getPlan()
     fun getFavPlace(planID: String) = planDao.getFavPlace(planID)
-    fun getFavDetails(restaurantID: String) = planDao.getFavDetails(restaurantID)
+    fun getFavDetails(placeID: String) = planDao.getFavDetails(placeID)
 
     suspend fun addPlan(plan: Plan){
         planDao.addPlan(plan)
@@ -22,12 +22,12 @@ class PlanRepository (private val planDao: PlanDao){
         planDao.deletePlan(plan)
     }
 
-    suspend fun addFavPlace(restaurantDetail: RestaurantDetail){
-        planDao.addFavPlace(restaurantDetail)
+    suspend fun addFavPlace(placesDetail: PlacesDetail){
+        planDao.addFavPlace(placesDetail)
     }
 
-    suspend fun deleteFavDetails(restaurantDetail: RestaurantDetail){
-        planDao.deleteFavDetails(restaurantDetail)
+    suspend fun deleteFavDetails(placesDetail: PlacesDetail){
+        planDao.deleteFavDetails(placesDetail)
     }
 
 }
