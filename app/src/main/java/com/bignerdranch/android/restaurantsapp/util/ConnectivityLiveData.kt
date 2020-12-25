@@ -1,4 +1,4 @@
-package com.bignerdranch.android.restaurantsapp
+package com.bignerdranch.android.restaurantsapp.util
 
 import android.app.Application
 import android.content.Context

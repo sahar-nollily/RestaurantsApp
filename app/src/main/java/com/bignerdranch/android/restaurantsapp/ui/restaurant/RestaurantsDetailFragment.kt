@@ -2,17 +2,14 @@ package com.bignerdranch.android.restaurantsapp.ui.restaurant
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ShareCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -21,8 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.bignerdranch.android.restaurantsapp.CheckNetwork
-import com.bignerdranch.android.restaurantsapp.ConnectivityLiveData
+import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
 import com.bignerdranch.android.restaurantsapp.databinding.DialogAddNoteBinding
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentRestaurantsDetailBinding
@@ -86,9 +82,10 @@ class RestaurantsDetailFragment : Fragment(), OnMapReadyCallback {
                     binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
                     binding.indicator.setViewPager(binding.viewPager)
                 })
+                binding.favPlace.visibility = View.GONE
             }
             else{
-                restaurantsViewModel.restaurantDetails("Bearer $RESTAURANT_API_KEY",args.restaurantId).observe(viewLifecycleOwner,
+                restaurantsViewModel.restaurantDetails("Bearer ${getString(R.string.RESTAURANT_API_KEY)}",args.restaurantId).observe(viewLifecycleOwner,
                     Observer {
                         restaurantDetail = it
                         binding.restaurantDetailViewModel = RestaurantDetailViewModel(it)
@@ -96,10 +93,14 @@ class RestaurantsDetailFragment : Fragment(), OnMapReadyCallback {
                         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
                         binding.indicator.setViewPager(binding.viewPager)
                     })
+                binding.favPlace.visibility = View.VISIBLE
+                binding.favPlace.setOnClickListener {
+                    addNote()
+                }
             }
 
             if(checkNetwork.isNetworkAvailable()){
-                weathersViewModel.getForecast(WEATHER_API_KEY,args.latLang,"2",0).observe(viewLifecycleOwner, Observer {
+                weathersViewModel.getForecast(getString(R.string.WEATHER_API_KEY),args.latLang,"2",0).observe(viewLifecycleOwner, Observer {
                     val getCurrentTime: String = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
                     val simpleDateFormat = SimpleDateFormat("HH:mm")
                     val currentTime = simpleDateFormat.parse(getCurrentTime)!!
@@ -120,7 +121,7 @@ class RestaurantsDetailFragment : Fragment(), OnMapReadyCallback {
 
                 })
 
-                weathersViewModel.getForecast(WEATHER_API_KEY,args.latLang,"2",1).observe(viewLifecycleOwner, Observer {
+                weathersViewModel.getForecast(getString(R.string.WEATHER_API_KEY),args.latLang,"2",1).observe(viewLifecycleOwner, Observer {
                     for(i in  0 .. 6){
                         weatherBinding = DataBindingUtil.inflate(LayoutInflater.from(context),
                             R.layout.weather_list_item,container,false)
@@ -133,10 +134,6 @@ class RestaurantsDetailFragment : Fragment(), OnMapReadyCallback {
                     }
 
                 })
-
-                binding.favPlace.setOnClickListener {
-                    addNote()
-                }
             }
 
             binding.restaurantShareTextView.setOnClickListener {
@@ -164,7 +161,9 @@ class RestaurantsDetailFragment : Fragment(), OnMapReadyCallback {
         fun bind(image: String){
             if(checkNetwork.isNetworkAvailable()){
                 Glide.with(binding.imageView).load(image).apply(
-                    RequestOptions()).into(binding.imageView)
+                    RequestOptions().transforms(
+                            CenterCrop(), RoundedCorners(1)
+                    )).into(binding.imageView)
             }
         }
     }
@@ -210,9 +209,13 @@ class RestaurantsDetailFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(p0: GoogleMap?) {
         p0?.setOnMapClickListener{
-            val restaurantLocation = LatLng(restaurantDetail.coordinates.latitude,restaurantDetail.coordinates.longitude)
-            p0.addMarker(MarkerOptions().position(restaurantLocation).title(restaurantDetail.name))
-            p0.animateCamera(CameraUpdateFactory.newLatLngZoom(restaurantLocation, 14F))
+            if(::restaurantDetail.isInitialized){
+                val restaurantLocation = LatLng(restaurantDetail.coordinates.latitude,restaurantDetail.coordinates.longitude)
+                p0.addMarker(MarkerOptions().position(restaurantLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker)).title(restaurantDetail.name))
+                p0.animateCamera(CameraUpdateFactory.newLatLngZoom(restaurantLocation, 14F))
+            }else{
+                Toast.makeText(requireContext(),getString(R.string.toast_no_Internet),Toast.LENGTH_LONG).show()
+            }
         }
     }
 

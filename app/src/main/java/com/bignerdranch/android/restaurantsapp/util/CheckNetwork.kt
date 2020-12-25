@@ -1,4 +1,4 @@
-package com.bignerdranch.android.restaurantsapp
+package com.bignerdranch.android.restaurantsapp.util
 
 import android.content.Context
 import android.net.ConnectivityManager

@@ -22,7 +22,7 @@ interface RestaurantDao{
     @Query("DELETE FROM Weather")
     suspend fun deleteWeather()
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addWeather(weather: Weather)
 
 }

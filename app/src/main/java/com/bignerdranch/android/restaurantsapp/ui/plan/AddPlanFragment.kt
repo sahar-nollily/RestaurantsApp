@@ -1,5 +1,7 @@
 package com.bignerdranch.android.restaurantsapp.ui.plan
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,11 +11,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bignerdranch.android.restaurantsapp.CheckNetwork
+import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
 import com.bignerdranch.android.restaurantsapp.database.plan.Plan
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentAddPlanBinding
-import com.bignerdranch.android.restaurantsapp.network.restaurants.RestaurantDetail
 import com.bignerdranch.android.restaurantsapp.ui.DatePickerFragment
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
 import java.text.DateFormat
@@ -93,10 +94,18 @@ class AddPlanFragment : Fragment() , DatePickerFragment.Callbacks{
                         }
                     }
                     binding.deleteTextView.setOnClickListener {
-                        planViewModel.deletePlan(plan)
-                        val action =
-                            AddPlanFragmentDirections.actionAddPlanFragmentToUserPlansFragment()
-                        findNavController().navigate(action)
+                        val dialog = AlertDialog.Builder(context)
+                        dialog.setTitle("Confirm")
+                                .setMessage("Are you sure ? ")
+                                .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialoginterface, i ->
+
+                                })
+                                .setPositiveButton("Ok", DialogInterface.OnClickListener { dialoginterface, i ->
+                                    planViewModel.deletePlan(plan)
+                                    val action =
+                                            AddPlanFragmentDirections.actionAddPlanFragmentToUserPlansFragment()
+                                    findNavController().navigate(action)
+                                }).show()
                     }
                 }
             }
