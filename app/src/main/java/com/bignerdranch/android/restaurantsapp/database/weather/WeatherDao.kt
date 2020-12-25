@@ -1,10 +1,8 @@
 package com.bignerdranch.android.restaurantsapp.database.weather
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.bignerdranch.android.restaurantsapp.network.weather.Weather
+import com.bignerdranch.android.restaurantsapp.data.Weather
 
 @Dao
 interface WeatherDao{

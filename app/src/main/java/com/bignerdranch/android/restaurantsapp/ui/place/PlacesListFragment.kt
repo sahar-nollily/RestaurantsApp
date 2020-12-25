@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,28 +18,26 @@ import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentPlacesListBinding
 import com.bignerdranch.android.restaurantsapp.databinding.PlaceListItemBinding
-import com.bignerdranch.android.restaurantsapp.network.places.Places
+import com.bignerdranch.android.restaurantsapp.data.Places
 import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlacesViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.weather.WeatherViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.weather.WeathersViewModel
-import com.bignerdranch.android.restaurantsapp.network.weather.Weather
+import com.bignerdranch.android.restaurantsapp.data.Weather
 import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlaceViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PlacesListFragment : Fragment() {
 
     val args by navArgs<PlacesListFragmentArgs>()
 
-    private val placesViewModel: PlacesViewModel by lazy {
-        ViewModelProvider(this).get(PlacesViewModel::class.java)
-    }
+    private val placesViewModel: PlacesViewModel by viewModels()
 
-    private val weathersViewModel: WeathersViewModel by lazy {
-        ViewModelProvider(this).get(WeathersViewModel::class.java)
-    }
+    private val weathersViewModel: WeathersViewModel by viewModels()
 
     private var adapter = PlaceAdapter(emptyList())
     private lateinit var binding: FragmentPlacesListBinding
@@ -88,7 +86,7 @@ class PlacesListFragment : Fragment() {
 
     private inner class PlaceHolder(private val binding: PlaceListItemBinding): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(places: Places, weather:Weather){
+        fun bind(places: Places, weather: Weather){
             binding.placeViewModel = PlaceViewModel(places)
             binding.weatherViewModel = WeatherViewModel(weather)
             Glide.with(binding.imageView).load(places.imageUrl).apply(
@@ -153,7 +151,7 @@ class PlacesListFragment : Fragment() {
     }
 
     private fun getPlaces(places: String){
-        placesViewModel.getPlaces("Bearer ${getString(R.string.RESTAURANT_API_KEY)}",places, args.latitude, args.longitude).observe(viewLifecycleOwner,
+        placesViewModel.getPlaces(places, args.latitude, args.longitude).observe(viewLifecycleOwner,
                 Observer{places->
                     if(places.isNotEmpty()){
                         adapter.setData(places)

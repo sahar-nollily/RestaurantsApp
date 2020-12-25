@@ -1,7 +1,7 @@
 package com.bignerdranch.android.restaurantsapp.viewmodel.plan
 
 import androidx.databinding.BaseObservable
-import com.bignerdranch.android.restaurantsapp.database.plan.Plan
+import com.bignerdranch.android.restaurantsapp.data.Plan
 
 class PlansViewModel(
     plan: Plan

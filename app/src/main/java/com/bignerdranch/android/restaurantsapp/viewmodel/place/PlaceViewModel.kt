@@ -1,10 +1,10 @@
 package com.bignerdranch.android.restaurantsapp.viewmodel.place
 
 import androidx.databinding.BaseObservable
-import com.bignerdranch.android.restaurantsapp.network.places.Places
+import com.bignerdranch.android.restaurantsapp.data.Places
 
 class PlaceViewModel (
-    places: Places,
+        places: Places,
 ) : BaseObservable() {
     val name: String = places.name
     val rating: Float = places.rating.toFloat()

@@ -1,10 +1,9 @@
-package com.bignerdranch.android.restaurantsapp.network.weather
+package com.bignerdranch.android.restaurantsapp.data
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
-import com.bignerdranch.android.restaurantsapp.network.places.Places
 
 
 @Entity(foreignKeys = [ForeignKey(

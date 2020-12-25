@@ -7,33 +7,30 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
-import com.bignerdranch.android.restaurantsapp.database.plan.Plan
+import com.bignerdranch.android.restaurantsapp.data.Plan
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentUserPlansBinding
 import com.bignerdranch.android.restaurantsapp.databinding.UserPlansItemBinding
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlansViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlacesViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class UserPlansFragment : Fragment() {
 
     private val args by navArgs<UserPlansFragmentArgs>()
 
-    private val planViewModel: PlanViewModel by lazy {
-        ViewModelProvider(this).get(PlanViewModel::class.java)
-    }
+    private val placesViewModel: PlacesViewModel by viewModels()
 
-    private val placesViewModel: PlacesViewModel by lazy {
-        ViewModelProvider(this).get(PlacesViewModel::class.java)
-    }
+    private val planViewModel: PlanViewModel by viewModels()
 
     private var adapter = PlanAdapter(emptyList())
     private lateinit var checkNetwork: CheckNetwork
@@ -47,7 +44,7 @@ class UserPlansFragment : Fragment() {
             R.layout.fragment_user_plans, container, false)
         checkNetwork = CheckNetwork(context)
 
-        planViewModel.getPlan.observe(viewLifecycleOwner, Observer {
+        planViewModel.getPlan().observe(viewLifecycleOwner, Observer {
             if(it.isEmpty()){
                 binding.addPlanTextView.visibility = View.VISIBLE
                 binding.addPlanButton.visibility = View.VISIBLE
@@ -118,12 +115,12 @@ class UserPlansFragment : Fragment() {
                 holder.itemView.setOnClickListener {
                     if(checkNetwork.isNetworkAvailable()){
                         if(args.CRUD == "add"){
-                            val restaurantDetails = placesViewModel.placeDetails("Bearer ${getString(R.string.RESTAURANT_API_KEY)}",args.placeID).value
-                            if(restaurantDetails != null){
-                                restaurantDetails.placeID = args.placeID
-                                restaurantDetails.planID = plan.planID
-                                restaurantDetails.note = args.note
-                                planViewModel.addFavPlace(restaurantDetails)
+                            val placeDetails = placesViewModel.placeDetails(args.placeID).value
+                            if(placeDetails != null){
+                                placeDetails.placeID = args.placeID
+                                placeDetails.planID = plan.planID
+                                placeDetails.note = args.note
+                                planViewModel.addFavPlace(placeDetails)
                             }
                         }
                     }

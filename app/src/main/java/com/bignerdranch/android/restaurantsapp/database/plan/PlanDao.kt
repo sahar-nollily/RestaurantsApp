@@ -2,7 +2,8 @@ package com.bignerdranch.android.restaurantsapp.database.plan
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.bignerdranch.android.restaurantsapp.network.places.PlacesDetail
+import com.bignerdranch.android.restaurantsapp.data.Plan
+import com.bignerdranch.android.restaurantsapp.data.PlacesDetail
 
 @Dao
 interface PlanDao{

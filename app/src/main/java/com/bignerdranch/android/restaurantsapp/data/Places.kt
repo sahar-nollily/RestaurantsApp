@@ -1,4 +1,4 @@
-package com.bignerdranch.android.restaurantsapp.network.places
+package com.bignerdranch.android.restaurantsapp.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
