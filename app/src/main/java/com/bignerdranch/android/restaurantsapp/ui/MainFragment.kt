@@ -55,7 +55,7 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
-    inner private class PlacesHolder(private val binding: MainListItemBinding): RecyclerView.ViewHolder(binding.root){
+    private inner class PlacesHolder(private val binding: MainListItemBinding): RecyclerView.ViewHolder(binding.root){
 
         fun bind(places: String){
             val drawable = resources.getIdentifier(places, "drawable", context?.packageName)

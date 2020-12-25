@@ -6,8 +6,8 @@ import com.bignerdranch.android.restaurantsapp.weather.Weather
 class WeatherViewModel (
     weather: Weather
 ) : BaseObservable() {
-    val temp_c: Double = weather.temp_c
-    val temp_f: Double = weather.temp_f
+    val temp_c = weather.temp_c.toString()+"C°"
+    val temp_f = weather.temp_f.toString()+"C°"
     val text: String = weather.condition.text
     val icon: String = weather.condition.icon
 }

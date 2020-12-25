@@ -2,10 +2,14 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="5dp">
     <data>
         <variable
-            name="viewModel"
+            name="weatherViewModel"
+            type="com.bignerdranch.android.restaurantsapp.viewmodel.weather.WeatherViewModel" />
+        <variable
+            name="restaurantViewModel"
             type="com.bignerdranch.android.restaurantsapp.viewmodel.restaurant.RestaurantViewModel" />
     </data>
 
@@ -18,7 +22,7 @@
             android:layout_height="24dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="4dp"
-            android:text="@{viewModel.name}"
+            android:text="@{restaurantViewModel.name}"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -37,7 +41,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="4dp"
             android:numStars="5"
-            android:rating="@{viewModel.rating}"
+            android:rating="@{restaurantViewModel.rating}"
             android:stepSize="0.5"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toBottomOf="@+id/restaurant_category_text_view" />
@@ -46,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:text="@{viewModel.categories}"
+            android:text="@{restaurantViewModel.categories}"
             android:layout_marginTop="4dp"
             android:textColor="@android:color/darker_gray"
             app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -57,9 +61,48 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="4dp"
-            android:text="@{viewModel.distanceInMeters}"
+            android:text="@{restaurantViewModel.distanceInMeters}"
             android:textColor="@android:color/darker_gray"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toBottomOf="@+id/restaurant_rate" />
+
+        <TextView
+            android:id="@+id/temp_c_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="40dp"
+            android:text="@{weatherViewModel.temp_c}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/temp_f_text_view" />
+
+        <TextView
+            android:id="@+id/temp_f_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
+            android:text="@{weatherViewModel.temp_f}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/condition_text_view" />
+
+        <TextView
+            android:id="@+id/condition_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="40dp"
+            android:text="@{weatherViewModel.text}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ic_condition_text_view" />
+
+        <ImageView
+            android:id="@+id/ic_condition_text_view"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="40dp"
+            android:hint="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

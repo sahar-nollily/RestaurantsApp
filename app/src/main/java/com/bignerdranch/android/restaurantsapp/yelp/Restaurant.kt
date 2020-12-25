@@ -6,12 +6,14 @@ import com.google.gson.annotations.SerializedName
 
 @Entity
 data class Restaurant(
-        @PrimaryKey(autoGenerate = true) val restaurantID : Int = 0,
+        @PrimaryKey
+        @SerializedName("id")val restaurantID : String,
         val name: String,
         val rating: Double,
         @SerializedName("distance") val distanceInMeters: Double,
         @SerializedName("image_url") val imageUrl: String,
-        var categories: List<YelpCategory>
+        val categories: List<YelpCategory>,
+        val coordinates: PlacesLocation
 ) {
     fun displayDistance(): String {
         val milesPerMeter = 0.000621371
@@ -21,5 +23,8 @@ data class Restaurant(
 }
 
 data class YelpCategory(
-        val title: String
-)
+        val title: String)
+
+data class PlacesLocation(
+        val latitude: Double,
+        val longitude: Double)

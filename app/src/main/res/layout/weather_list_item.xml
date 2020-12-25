@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="forecastWeatherViewModel"
+            type="com.bignerdranch.android.restaurantsapp.viewmodel.weather.ForecastWeatherViewModel"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="5dp"
+        android:padding="10dp"
+        tools:layout_editor_absoluteX="160dp"
+        tools:layout_editor_absoluteY="188dp">
+
+        <TextView
+            android:id="@+id/weather_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{forecastWeatherViewModel.time}"/>
+
+        <TextView
+            android:id="@+id/weather_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{forecastWeatherViewModel.weatherText}"/>
+
+        <ImageView
+            android:id="@+id/ic_weather"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+
+        <TextView
+            android:id="@+id/weather_temp_c"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{forecastWeatherViewModel.temp_c}"/>
+
+        <TextView
+            android:id="@+id/weather_temp_f"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{forecastWeatherViewModel.temp_f}"/>
+
+
+    </LinearLayout>
+
+</layout>
