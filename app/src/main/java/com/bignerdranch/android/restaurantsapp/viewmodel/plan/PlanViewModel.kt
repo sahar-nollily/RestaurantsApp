@@ -6,11 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bignerdranch.android.restaurantsapp.ServiceLocator
 import com.bignerdranch.android.restaurantsapp.database.plan.Plan
+import com.bignerdranch.android.restaurantsapp.network.restaurants.RestaurantDetail
 import kotlinx.coroutines.launch
 
 class PlanViewModel: ViewModel() {
     private val planRepository= ServiceLocator.planRepository
     val getPlan : LiveData<List<Plan>> = planRepository.getPlan
+    fun getFavPlace(planID: String) : LiveData<List<RestaurantDetail>> = planRepository.getFavPlace(planID)
+    fun getFavDetails(favID: String) = planRepository.getFavDetails(favID)
+
 
     fun addPlan(plan: Plan){
         viewModelScope.launch {
@@ -32,6 +36,11 @@ class PlanViewModel: ViewModel() {
         }
     }
 
+    fun addFavPlace(restaurantDetail: RestaurantDetail){
+        viewModelScope.launch {
+            planRepository.addFavPlace(restaurantDetail)
+        }
+    }
 
 
 

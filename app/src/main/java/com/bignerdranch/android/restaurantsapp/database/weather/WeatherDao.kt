@@ -12,6 +12,4 @@ interface WeatherDao{
     @Query("SELECT * FROM Weather WHERE weatherID = :weatherID")
     suspend fun getWeather(weatherID: String): Weather
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addWeather(weather: Weather)
 }

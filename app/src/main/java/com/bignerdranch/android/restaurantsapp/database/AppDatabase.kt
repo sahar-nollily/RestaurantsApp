@@ -8,9 +8,10 @@ import com.bignerdranch.android.restaurantsapp.database.plan.PlanDao
 import com.bignerdranch.android.restaurantsapp.database.restaurant.RestaurantDao
 import com.bignerdranch.android.restaurantsapp.database.weather.WeatherDao
 import com.bignerdranch.android.restaurantsapp.network.restaurants.Restaurant
+import com.bignerdranch.android.restaurantsapp.network.restaurants.RestaurantDetail
 import com.bignerdranch.android.restaurantsapp.network.weather.Weather
 
-@Database(entities = [Restaurant::class, Weather::class, Plan::class], version = 1)
+@Database(entities = [Restaurant::class, Weather::class, Plan::class, RestaurantDetail::class], version = 1)
 @TypeConverters(AppTypeConverters::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun restaurantDao(): RestaurantDao

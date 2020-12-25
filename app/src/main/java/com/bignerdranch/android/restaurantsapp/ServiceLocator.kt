@@ -17,7 +17,7 @@ object ServiceLocator {
     private lateinit var weatherRetrofit: Retrofit
     private lateinit var yelpApi: YelpApi
     private lateinit var weatherApi: WeatherApi
-    private lateinit var restaurantDatabase: AppDatabase
+    private lateinit var appDatabase: AppDatabase
 
 
     fun init(app: App) {
@@ -48,7 +48,7 @@ object ServiceLocator {
     }
 
     private fun initializeYelpDatabase(context: Context) {
-        restaurantDatabase = Room.databaseBuilder(
+        appDatabase = Room.databaseBuilder(
             context,
             AppDatabase::class.java,
             "restaurant_db"
@@ -56,14 +56,14 @@ object ServiceLocator {
     }
 
     val yelpRepository: YelpRepository by lazy {
-        YelpRepository(yelpApi, restaurantDatabase.restaurantDao())
+        YelpRepository(yelpApi, appDatabase.restaurantDao(),weatherApi)
     }
 
     val weatherRepository: WeatherRepository by lazy {
-        WeatherRepository(weatherApi, restaurantDatabase.weatherDao())
+        WeatherRepository(weatherApi, appDatabase.weatherDao())
     }
 
     val planRepository: PlanRepository by lazy {
-        PlanRepository(restaurantDatabase.planDao())
+        PlanRepository(appDatabase.planDao())
     }
 }

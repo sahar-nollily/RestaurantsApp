@@ -1,5 +1,6 @@
 package com.bignerdranch.android.restaurantsapp.network.restaurants
 
+import com.bignerdranch.android.restaurantsapp.network.weather.WeatherResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
@@ -16,4 +17,8 @@ interface YelpApi{
     @GET("businesses/{id}")
     suspend fun restaurantDetails(@Header("Authorization") authorization: String,
                                   @Path("id")restaurantId: String): RestaurantDetail
+
+    @GET("current.json")
+    suspend fun getWeather(@Query("key") key: String,
+                           @Query("q") latLon: String): WeatherResponse
 }

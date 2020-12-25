@@ -35,9 +35,4 @@ class WeathersViewModel : ViewModel(){
         return forecast
     }
 
-     fun addWeather(weather: Weather){
-         viewModelScope.launch {
-             weatherRepository.addWeather(weather)
-         }
-    }
 }

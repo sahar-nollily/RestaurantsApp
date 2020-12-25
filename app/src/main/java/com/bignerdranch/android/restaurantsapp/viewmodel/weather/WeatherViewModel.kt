@@ -8,6 +8,6 @@ class WeatherViewModel (
 ) : BaseObservable() {
     val temp_c = weather.temp_c.toString()+"C°"
     val temp_f = weather.temp_f.toString()+"C°"
-    val text: String = weather.condition.text
-    val icon: String = weather.condition.icon
+    val text: String? = weather.condition?.text
+    val icon: String? = weather.condition?.icon
 }

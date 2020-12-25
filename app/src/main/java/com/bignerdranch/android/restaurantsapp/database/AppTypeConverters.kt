@@ -2,6 +2,7 @@ package com.bignerdranch.android.restaurantsapp.database
 
 import androidx.room.TypeConverter
 import com.bignerdranch.android.restaurantsapp.network.restaurants.PlacesLocation
+import com.bignerdranch.android.restaurantsapp.network.restaurants.RestaurantLocation
 import com.bignerdranch.android.restaurantsapp.network.restaurants.YelpCategory
 import com.bignerdranch.android.restaurantsapp.network.weather.WeatherCondition
 import com.google.gson.Gson
@@ -44,4 +45,31 @@ class AppTypeConverters {
         val x = condition.split(",")
         return WeatherCondition(x[0],x[1])
     }
+
+    @TypeConverter
+    fun fromRestaurantLocation(restaurantLocation: RestaurantLocation):String{
+        return "${restaurantLocation.city},${restaurantLocation.address1}"
+    }
+
+    @TypeConverter
+    fun toRestaurantLocation(location :String): RestaurantLocation {
+        val x = location.split(",")
+        return RestaurantLocation(x[0],x[1])
+    }
+
+    @TypeConverter
+    fun fromPhotoList(photo: List<String>): String {
+        val gson = Gson()
+        val type = object : TypeToken<List<String>>() {}.type
+        return gson.toJson(photo, type)
+    }
+
+    @TypeConverter
+    fun toPhotoList(photo: String): List<String> {
+        val gson = Gson()
+        val type = object : TypeToken<List<String>>() {}.type
+        return gson.fromJson<List<String>>(photo, type)
+    }
+
+
 }

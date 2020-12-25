@@ -19,8 +19,4 @@ class WeatherRepository (private val weatherApi: WeatherApi, private val weather
         return weatherApi.getForecast(key, latLon, days).forecast.forecastday[index].hour
     }
 
-    suspend fun addWeather(weather: Weather){
-        weatherDao.addWeather(weather)
-    }
-
 }

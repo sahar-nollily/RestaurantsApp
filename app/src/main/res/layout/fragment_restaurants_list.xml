@@ -14,9 +14,9 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="70dp"
+            android:layout_height="50dp"
             android:adjustViewBounds="true"
-            android:layout_marginTop="-95dp"
+            android:layout_marginTop="-80dp"
             android:layout_marginBottom="40dp"
             android:layout_gravity="end"
             android:src="@drawable/logo" />
@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/location"
-            android:layout_marginTop="-40dp"
+            android:layout_marginTop="-35dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="20dp"
@@ -38,19 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true" />
-
-
-        <TextView
-            android:id="@+id/no_connection"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="-50dp"
-            android:background="#959595"
-            android:padding="10dp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:text="@string/no_internet"/>
 
     </LinearLayout>
 </layout>

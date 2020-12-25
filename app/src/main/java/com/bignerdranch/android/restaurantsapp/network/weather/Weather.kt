@@ -13,9 +13,9 @@ import com.bignerdranch.android.restaurantsapp.network.restaurants.Restaurant
         childColumns = arrayOf("weatherID"),
         onDelete = CASCADE)])
 data class Weather(
-        @PrimaryKey var weatherID: String,
-        val temp_c: Double,
-        val temp_f: Double,
+        @PrimaryKey var weatherID: String = "",
+        val temp_c: Double = 0.0,
+        val temp_f: Double = 0.0,
         val condition: WeatherCondition)
 
 data class Forecast(
