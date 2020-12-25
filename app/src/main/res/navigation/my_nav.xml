@@ -96,7 +96,7 @@
             app:argType="string" />
         <argument
             android:name="plan"
-            app:argType="com.bignerdranch.android.restaurantsapp.database.plan.Plan"
+            app:argType="com.bignerdranch.android.restaurantsapp.data.Plan"
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
@@ -107,7 +107,7 @@
         tools:layout="@layout/fragment_day_plans" >
         <argument
             android:name="plan"
-            app:argType="com.bignerdranch.android.restaurantsapp.database.plan.Plan" />
+            app:argType="com.bignerdranch.android.restaurantsapp.data.Plan" />
         <action
             android:id="@+id/action_DayPlansFragment_to_restaurantsDetailFragment"
             app:destination="@id/restaurantsDetailFragment" />

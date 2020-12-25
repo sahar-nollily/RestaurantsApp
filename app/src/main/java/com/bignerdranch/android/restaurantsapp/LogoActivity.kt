@@ -8,7 +8,9 @@ import android.os.Handler
 import android.os.Looper
 import androidx.databinding.DataBindingUtil
 import com.bignerdranch.android.restaurantsapp.databinding.ActivityLogoBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LogoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

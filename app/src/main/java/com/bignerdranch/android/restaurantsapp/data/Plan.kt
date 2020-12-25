@@ -1,4 +1,4 @@
-package com.bignerdranch.android.restaurantsapp.database.plan
+package com.bignerdranch.android.restaurantsapp.data
 
 import android.os.Parcelable
 import androidx.room.Entity

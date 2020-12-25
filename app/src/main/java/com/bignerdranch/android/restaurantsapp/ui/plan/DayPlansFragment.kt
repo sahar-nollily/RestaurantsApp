@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -18,7 +18,7 @@ import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentDayPlansBinding
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentUserPlansBinding
-import com.bignerdranch.android.restaurantsapp.network.places.PlacesDetail
+import com.bignerdranch.android.restaurantsapp.data.PlacesDetail
 import com.bignerdranch.android.restaurantsapp.util.SwipeController
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlaceDetailViewModel
@@ -32,9 +32,7 @@ class DayPlansFragment : Fragment() {
 
     private val args by navArgs<DayPlansFragmentArgs>()
 
-    private val planViewModel: PlanViewModel by lazy {
-        ViewModelProvider(this).get(PlanViewModel::class.java)
-    }
+    private val planViewModel: PlanViewModel by viewModels()
 
     private var adapter = PlaceAdapter(emptyList())
     private lateinit var checkNetwork: CheckNetwork

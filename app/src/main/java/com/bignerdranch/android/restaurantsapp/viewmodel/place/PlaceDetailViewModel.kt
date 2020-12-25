@@ -1,7 +1,7 @@
 package com.bignerdranch.android.restaurantsapp.viewmodel.place
 
 import androidx.databinding.BaseObservable
-import com.bignerdranch.android.restaurantsapp.network.places.PlacesDetail
+import com.bignerdranch.android.restaurantsapp.data.PlacesDetail
 
 class PlaceDetailViewModel(
     placesDetail: PlacesDetail

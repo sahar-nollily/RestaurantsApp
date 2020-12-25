@@ -8,12 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
-import com.bignerdranch.android.restaurantsapp.database.plan.Plan
+import com.bignerdranch.android.restaurantsapp.data.Plan
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentAddPlanBinding
 import com.bignerdranch.android.restaurantsapp.ui.DatePickerFragment
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
@@ -27,10 +27,7 @@ class AddPlanFragment : Fragment() , DatePickerFragment.Callbacks{
 
     private val args by navArgs<AddPlanFragmentArgs>()
 
-    private val planViewModel:PlanViewModel by lazy {
-        ViewModelProvider(this).get(PlanViewModel::class.java)
-    }
-
+    private val planViewModel:PlanViewModel by viewModels()
     private lateinit var binding :FragmentAddPlanBinding
     private lateinit var checkNetwork: CheckNetwork
 
@@ -60,7 +57,7 @@ class AddPlanFragment : Fragment() , DatePickerFragment.Callbacks{
                     val description = binding.planDescriptionTextView.text.toString()
                     checkInputValidation(name, description)
                     if(checkInputValidation(name, description)){
-                        val plan = Plan(0, name,color, date, description)
+                        val plan = Plan(0, name, color, date, description)
                         planViewModel.addPlan(plan)
                         val action =
                             AddPlanFragmentDirections.actionAddPlanFragmentToUserPlansFragment()
@@ -86,7 +83,7 @@ class AddPlanFragment : Fragment() , DatePickerFragment.Callbacks{
                         val description = binding.planDescriptionTextView.text.toString()
                         checkInputValidation(name, description)
                         if(checkInputValidation(name, description)){
-                            val plan = Plan(plan.planID, name,color, date, description)
+                            val plan = Plan(plan.planID, name, color, date, description)
                             planViewModel.updatePlan(plan)
                             val action =
                                 AddPlanFragmentDirections.actionAddPlanFragmentToUserPlansFragment()

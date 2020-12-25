@@ -12,8 +12,8 @@ import android.widget.Toast
 import androidx.core.app.ShareCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +24,7 @@ import com.bignerdranch.android.restaurantsapp.databinding.DialogAddNoteBinding
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentPlaceDetailBinding
 import com.bignerdranch.android.restaurantsapp.databinding.ViewPagerItemBinding
 import com.bignerdranch.android.restaurantsapp.databinding.WeatherListItemBinding
-import com.bignerdranch.android.restaurantsapp.network.places.PlacesDetail
+import com.bignerdranch.android.restaurantsapp.data.PlacesDetail
 import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlaceDetailViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlacesViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.weather.ForecastWeatherViewModel
@@ -41,24 +41,20 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 
+@AndroidEntryPoint
 class PlaceDetailFragment : Fragment(), OnMapReadyCallback {
 
     val args by navArgs<PlaceDetailFragmentArgs>()
 
-    private val placesViewModel: PlacesViewModel by lazy {
-        ViewModelProvider(this).get(PlacesViewModel::class.java)
-    }
+    private val placesViewModel: PlacesViewModel by viewModels()
 
-    private val weathersViewModel: WeathersViewModel by lazy {
-        ViewModelProvider(this).get(WeathersViewModel::class.java)
-    }
+    private val weathersViewModel: WeathersViewModel by viewModels()
 
-    private val planViewModel: PlanViewModel by lazy {
-        ViewModelProvider(this).get(PlanViewModel::class.java)
-    }
+    private val planViewModel: PlanViewModel by viewModels()
 
     private lateinit var placesDetail: PlacesDetail
     private lateinit var weatherBinding:WeatherListItemBinding
@@ -85,7 +81,7 @@ class PlaceDetailFragment : Fragment(), OnMapReadyCallback {
                 binding.favPlace.visibility = View.GONE
             }
             else{
-                placesViewModel.placeDetails("Bearer ${getString(R.string.RESTAURANT_API_KEY)}",args.restaurantId).observe(viewLifecycleOwner,
+                placesViewModel.placeDetails(args.restaurantId).observe(viewLifecycleOwner,
                     Observer {
                         placesDetail = it
                         binding.placeDetailViewModel = PlaceDetailViewModel(it)
@@ -100,7 +96,7 @@ class PlaceDetailFragment : Fragment(), OnMapReadyCallback {
             }
 
             if(checkNetwork.isNetworkAvailable()){
-                weathersViewModel.getForecast(getString(R.string.WEATHER_API_KEY),args.latLang,"2",0).observe(viewLifecycleOwner, Observer {
+                weathersViewModel.getForecast(args.latLang,"2",0).observe(viewLifecycleOwner, Observer {
                     val getCurrentTime: String = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
                     val simpleDateFormat = SimpleDateFormat("HH:mm")
                     val currentTime = simpleDateFormat.parse(getCurrentTime)!!
@@ -121,7 +117,7 @@ class PlaceDetailFragment : Fragment(), OnMapReadyCallback {
 
                 })
 
-                weathersViewModel.getForecast(getString(R.string.WEATHER_API_KEY),args.latLang,"2",1).observe(viewLifecycleOwner, Observer {
+                weathersViewModel.getForecast(args.latLang,"2",1).observe(viewLifecycleOwner, Observer {
                     for(i in  0 .. 6){
                         weatherBinding = DataBindingUtil.inflate(LayoutInflater.from(context),
                             R.layout.weather_list_item,container,false)

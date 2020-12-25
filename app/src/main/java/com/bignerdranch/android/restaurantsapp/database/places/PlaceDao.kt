@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.bignerdranch.android.restaurantsapp.network.places.Places
-import com.bignerdranch.android.restaurantsapp.network.weather.Weather
+import com.bignerdranch.android.restaurantsapp.data.Places
+import com.bignerdranch.android.restaurantsapp.data.Weather
 
 @Dao
 interface PlaceDao{

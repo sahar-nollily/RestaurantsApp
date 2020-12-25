@@ -5,11 +5,13 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.DatePicker
 import androidx.fragment.app.DialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 
 import java.util.*
 
 private const val ARG_DATE = "date"
 
+@AndroidEntryPoint
 class DatePickerFragment : DialogFragment() {
 
     interface Callbacks {

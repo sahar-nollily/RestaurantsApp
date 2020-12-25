@@ -20,8 +20,10 @@ import com.bignerdranch.android.restaurantsapp.databinding.FragmentMainBinding
 import com.bignerdranch.android.restaurantsapp.databinding.MainListItemBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+@AndroidEntryPoint
 class MainFragment : Fragment() {
     private lateinit var binding : FragmentMainBinding
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient

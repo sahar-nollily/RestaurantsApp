@@ -7,7 +7,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.bignerdranch.android.restaurantsapp.databinding.ActivityMainBinding
 import com.bignerdranch.android.restaurantsapp.util.ConnectivityLiveData
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var connectivityLiveData: ConnectivityLiveData
 

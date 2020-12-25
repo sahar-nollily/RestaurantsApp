@@ -2,12 +2,15 @@ package com.bignerdranch.android.restaurantsapp.repository
 
 import com.bignerdranch.android.restaurantsapp.database.places.PlaceDao
 import com.bignerdranch.android.restaurantsapp.network.places.PlaceApi
-import com.bignerdranch.android.restaurantsapp.network.places.Places
-import com.bignerdranch.android.restaurantsapp.network.places.PlacesDetail
-import com.bignerdranch.android.restaurantsapp.network.weather.Weather
+import com.bignerdranch.android.restaurantsapp.data.Places
+import com.bignerdranch.android.restaurantsapp.data.PlacesDetail
+import com.bignerdranch.android.restaurantsapp.data.Weather
 import com.bignerdranch.android.restaurantsapp.network.weather.WeatherApi
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class PlaceRepository(
+@Singleton
+class PlaceRepository @Inject constructor(
     private val placeApi: PlaceApi,
     private val placeDao: PlaceDao,
     private val weatherApi: WeatherApi
@@ -15,10 +18,10 @@ class PlaceRepository(
 
     suspend fun getPlace() : List<Places> =placeDao.getPlace()
 
-    suspend fun getPlaces(authorization: String, term:String,latitude: String, longitude: String):List<Places>{
+    suspend fun getPlaces(term:String,latitude: String, longitude: String):List<Places>{
         deleteWeather()
         deletePlace()
-        val places = placeApi.getPlaces(authorization, term, latitude, longitude).places
+        val places = placeApi.getPlaces(term, latitude, longitude).places
         placeDao.addPlace(*places.map {
             Places(
                     it.placeID,
@@ -32,18 +35,18 @@ class PlaceRepository(
         }.toTypedArray()
         )
         places.map {
-        val weather = weatherApi.getWeather("803bb8a53fdd48baaa0113628201712","${it.coordinates.latitude}, ${it.coordinates.longitude}").current
+        val weather = weatherApi.getWeather("${it.coordinates.latitude}, ${it.coordinates.longitude}").current
         placeDao.addWeather(
-            Weather(it.placeID,
-            weather.temp_c,
-            weather.temp_f,
-            weather.condition))
+                Weather(it.placeID,
+                        weather.temp_c,
+                        weather.temp_f,
+                        weather.condition))
         }
         return places
     }
 
-    suspend fun placeDetails(authorization: String, placeId: String): PlacesDetail {
-        return placeApi.placeDetails(authorization,placeId)
+    suspend fun placeDetails(placeId: String): PlacesDetail {
+        return placeApi.placeDetails(placeId)
     }
 
     private suspend fun deletePlace()=placeDao.deletePlace()
