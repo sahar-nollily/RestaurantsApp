@@ -59,8 +59,7 @@ class AddPlanFragment : Fragment() , DatePickerFragment.Callbacks{
                     val description = binding.planDescriptionTextView.text.toString()
                     checkInputValidation(name, description)
                     if(checkInputValidation(name, description)){
-                        val plan = Plan(0, name, color, date, description)
-                        planViewModel.addPlan(plan)
+                        planViewModel.addPlan( name, color, date, description)
                         val action =
                             AddPlanFragmentDirections.actionAddPlanFragmentToUserPlansFragment()
                         findNavController().navigate(action)

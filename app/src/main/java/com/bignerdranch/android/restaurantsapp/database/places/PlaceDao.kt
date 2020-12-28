@@ -1,5 +1,6 @@
 package com.bignerdranch.android.restaurantsapp.database.places
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -11,7 +12,7 @@ import com.bignerdranch.android.restaurantsapp.data.Weather
 interface PlaceDao{
 
     @Query("SELECT * FROM Places")
-    suspend fun getPlace(): List<Places>
+    fun getPlace(): LiveData<List<Places>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addPlace(vararg places: Places)

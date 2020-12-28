@@ -16,15 +16,13 @@ class PlacesViewModel @ViewModelInject constructor(
     private val yelpRepository: PlaceRepository
 ): ViewModel(){
 
-    private val place = MutableLiveData<List<Places>>()
+    private var place = MutableLiveData<List<Places>>()
     private val placesDetail = MutableLiveData<PlacesDetail>()
     private val placeReview = MutableLiveData<ReviewResponse>()
 
 
     fun getPlace() : LiveData<List<Places>> {
-        viewModelScope.launch {
-            place.value = yelpRepository.getPlace()
-        }
+        place = yelpRepository.getPlace() as MutableLiveData<List<Places>>
         return place
     }
 

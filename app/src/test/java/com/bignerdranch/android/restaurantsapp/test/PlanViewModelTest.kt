@@ -3,6 +3,7 @@ package com.bignerdranch.android.restaurantsapp.test
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.bignerdranch.android.restaurantsapp.MainCoroutineRule
 import com.bignerdranch.android.restaurantsapp.getOrAwaitValueTest
+import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -18,18 +19,18 @@ class PlanViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var fakePlanViewModel: FakePlanViewModel
+    private lateinit var planViewModel: PlanViewModel
 
     @Before
     fun setup() {
-        fakePlanViewModel = FakePlanViewModel(FakePlanRepositoryTest())
+        planViewModel = PlanViewModel(FakePlanRepositoryTest())
     }
 
     @Test
     fun `add plan with empty field, returns error`() {
-        fakePlanViewModel.addPlanTest("name", "", "date","")
+        planViewModel.addPlan("name", "", "date","")
 
-        val value = fakePlanViewModel.plan.getOrAwaitValueTest()
+        val value = planViewModel.getPlan.getOrAwaitValueTest()
 
         assertThat(value.getContentIfNotHandled()?.status).isEqualTo(Status.ERROR)
     }
@@ -37,9 +38,9 @@ class PlanViewModelTest {
 
     @Test
     fun `add plan with valid input, returns success`() {
-        fakePlanViewModel.addPlanTest("name", "color", "date","description")
+        planViewModel.addPlan("name", "color", "date","description")
 
-        val value = fakePlanViewModel.plan.getOrAwaitValueTest()
+        val value = planViewModel.getPlan.getOrAwaitValueTest()
 
         assertThat(value.getContentIfNotHandled()?.status).isEqualTo(Status.SUCCESS)
     }

@@ -10,6 +10,7 @@ class PlaceDetailViewModel(
     val location: String = "${placesDetail.location.city}, ${placesDetail.location.address1}"
     val isClose: String = placesDetail.isClosed()
     val note: String= placesDetail.note
+    val time: String= placesDetail.time
     val categories = placesDetail.categories[0].title
 
 }

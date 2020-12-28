@@ -1,5 +1,6 @@
 package com.bignerdranch.android.restaurantsapp.repository
 
+import androidx.lifecycle.LiveData
 import com.bignerdranch.android.restaurantsapp.database.places.PlaceDao
 import com.bignerdranch.android.restaurantsapp.network.places.PlaceApi
 import com.bignerdranch.android.restaurantsapp.data.Places
@@ -17,7 +18,7 @@ class PlaceRepository @Inject constructor(
     private val weatherApi: WeatherApi
 ){
 
-    suspend fun getPlace() : List<Places> =placeDao.getPlace()
+    fun getPlace() : LiveData<List<Places>> =placeDao.getPlace()
 
     suspend fun getPlaces(term:String,latitude: String, longitude: String):List<Places>{
         deleteWeather()

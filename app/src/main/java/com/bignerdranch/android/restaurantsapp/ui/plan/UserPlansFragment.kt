@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -161,10 +162,14 @@ class UserPlansFragment : Fragment() {
             val note = binding.noteEditText.text.toString()
             placeDetails.placeID = args.placeID
             placeDetails.planID = plan.planID
+            placeDetails.time = "no"
             placeDetails.note = note
             planViewModel.addFavPlace(placeDetails)
             val action = UserPlansFragmentDirections.actionUserPlansFragmentToDayPlansFragment(plan)
-            findNavController().navigate(action)
+            val navOptions = NavOptions.Builder()
+                    .setPopUpTo(R.id.userPlansFragment, true)
+                    .build()
+            findNavController().navigate(action,navOptions)
             alertDialog.dismiss()
         }
     }

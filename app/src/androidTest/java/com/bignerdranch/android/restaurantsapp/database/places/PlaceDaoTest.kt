@@ -1,8 +1,10 @@
-package com.bignerdranch.android.restaurantsapp.database.plan
+package com.bignerdranch.android.restaurantsapp.database.places
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
-import com.bignerdranch.android.restaurantsapp.data.Plan
+import com.bignerdranch.android.restaurantsapp.data.Category
+import com.bignerdranch.android.restaurantsapp.data.Places
+import com.bignerdranch.android.restaurantsapp.data.PlacesLocation
 import com.bignerdranch.android.restaurantsapp.database.AppDatabase
 import com.bignerdranch.android.restaurantsapp.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,7 +22,7 @@ import javax.inject.Named
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 @SmallTest
-class PlanDaoTest {
+class PlaceDaoTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -31,13 +33,13 @@ class PlanDaoTest {
     @Inject
     @Named("test_db")
     lateinit var appDatabase: AppDatabase
-    private lateinit var planDao: PlanDao
+    private lateinit var placeDao: PlaceDao
 
     @Before
     fun setup(){
         hiltRule.inject()
 
-        planDao = appDatabase.planDao()
+        placeDao = appDatabase.placeDao()
     }
 
     @After
@@ -46,22 +48,27 @@ class PlanDaoTest {
     }
 
     @Test
-    fun addPlan()= runBlockingTest {
-        val plan = Plan(2, "name", "yellow", "date", "test")
-        planDao.addPlan(plan)
-        val plans = planDao.getPlan().getOrAwaitValue()
+    fun addPlace()= runBlockingTest {
+        val place = Places("id","name",1.0,1.0,"imageUrl",
+            listOf(Category("title")), PlacesLocation(0.0,0.0)
+        )
+        placeDao.addPlace(place)
+        val places = placeDao.getPlace().getOrAwaitValue()
 
-        assertThat(plans).contains(plan)
+        assertThat(places).contains(place)
     }
 
     @Test
-    fun deletePlan()= runBlockingTest {
-        val plan = Plan(2, "name", "yellow", "date", "test")
-        planDao.addPlan(plan)
-        planDao.deletePlan(plan)
-        val plans = planDao.getPlan().getOrAwaitValue()
+    fun deletePlace()= runBlockingTest {
+        val place = Places("id","name",1.0,1.0,"imageUrl",
+            listOf(Category("title")), PlacesLocation(0.0,0.0)
+        )
+        placeDao.addPlace(place)
+        placeDao.deletePlace()
 
-        assertThat(plans).doesNotContain(plans)
+        val places = placeDao.getPlace().getOrAwaitValue()
+
+        assertThat(places).doesNotContain(place)
     }
 
 

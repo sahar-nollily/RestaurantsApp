@@ -1,7 +1,6 @@
 package com.bignerdranch.android.restaurantsapp.ui.place
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
-import com.bignerdranch.android.restaurantsapp.databinding.DialogAddNoteBinding
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentPlaceDetailBinding
 import com.bignerdranch.android.restaurantsapp.databinding.ViewPagerItemBinding
 import com.bignerdranch.android.restaurantsapp.databinding.WeatherListItemBinding

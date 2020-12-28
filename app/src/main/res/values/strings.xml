@@ -29,5 +29,6 @@
     <string name="no_places">There Is No Places To Show</string>
     <string name="toast_no_Internet">You must have an internet</string>
     <string name="reviews">Reviews </string>
+    <string name="cancel_alarm">Alarm Cancelled Successfully</string>
 
 </resources>

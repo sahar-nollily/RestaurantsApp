@@ -63,9 +63,6 @@ class PlacesListFragment : Fragment() {
 
         binding.locationSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (checkNetwork.isNetworkAvailable()){
-                    getPlaces("${args.places} $query" )
-                }
                 return false
             }
 
@@ -124,7 +121,6 @@ class PlacesListFragment : Fragment() {
                         holder.bind(place, it)
                     }
                 })
-
 
             holder.itemView.setOnClickListener {
                 val action =
