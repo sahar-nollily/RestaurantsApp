@@ -10,7 +10,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 
 
-class NotificationHelper(context: Context?, val name:String ) : ContextWrapper(context) {
+class NotificationHelper(context: Context?,val text: String ,val name:String ) : ContextWrapper(context) {
     private var mManager: NotificationManager? = null
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -38,12 +38,12 @@ class NotificationHelper(context: Context?, val name:String ) : ContextWrapper(c
             channelID
         )
             .setContentTitle(name)
-            .setContentText("Are you excited to visit $name")
+            .setContentText("The weather is $text at $name")
             .setSmallIcon(R.drawable.alert_light_frame)
 
     companion object {
-        const val channelID: String = "channelID"
-        const val channelName: String = "Channel Name"
+        const val channelID: String = "1"
+        const val channelName: String = "Forecast Weather"
     }
 
     init {
