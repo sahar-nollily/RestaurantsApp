@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.NetworkRequest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,14 +20,15 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.*
 import com.bignerdranch.android.restaurantsapp.R
 import com.bignerdranch.android.restaurantsapp.data.PlacesDetail
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentDayPlansBinding
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentUserPlansBinding
 import com.bignerdranch.android.restaurantsapp.ui.TimePickerFragment
-import com.bignerdranch.android.restaurantsapp.util.AlertReceiver
 import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.util.SwipeController
+import com.bignerdranch.android.restaurantsapp.util.WorkManager
 import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlaceDetailViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
 import com.bumptech.glide.Glide
@@ -36,6 +38,7 @@ import com.bumptech.glide.request.RequestOptions
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 private const val DIALOG_TIME = "DialogTime"
 private const val REQUEST_TIME = 1
@@ -112,7 +115,7 @@ class DayPlansFragment : Fragment(), TimePickerFragment.Callbacks {
                 binding.cancelAlarmButton.visibility = View.VISIBLE
             }
             binding.cancelAlarmButton.setOnClickListener {
-                cancelAlarm(placesDetail.favID)
+                cancelAlarm(placesDetail.favID, placesDetail.placeID)
             }
             binding.icTime.setOnClickListener {
                 TimePickerFragment(placesDetail).apply {
@@ -165,24 +168,37 @@ class DayPlansFragment : Fragment(), TimePickerFragment.Callbacks {
     }
 
     private fun startAlarm(calendar: Calendar, placesDetail: PlacesDetail) {
-        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(requireActivity(), AlertReceiver::class.java)
-        intent.putExtra("name",placesDetail.name)
-        val pendingIntent = PendingIntent.getBroadcast(requireContext(), placesDetail.favID, intent, 0)
+        val currentDate = Calendar.getInstance()
+        val timeDiff = calendar.timeInMillis - currentDate.timeInMillis
 
-        if (calendar.before(Calendar.getInstance())) {
+        if (calendar.before(currentDate)) {
             calendar.add(Calendar.DATE, 1)
         }
-        alarmManager[AlarmManager.RTC_WAKEUP, calendar.timeInMillis] = pendingIntent
+        val location = "${placesDetail.coordinates.latitude}, ${placesDetail.coordinates.longitude}"
+        val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.UNMETERED)
+                .build()
+
+        val request = OneTimeWorkRequest.Builder(WorkManager::class.java)
+                .setConstraints(constraints)
+                .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
+                .addTag(placesDetail.placeID)
+
+        val data = Data.Builder()
+        data.putString("name", placesDetail.name)
+        data.putString("time", placesDetail.time)
+        data.putString("location", location)
+        data.putString("favID", placesDetail.favID.toString())
+        request.setInputData(data.build())
+        val workManager = androidx.work.WorkManager.getInstance(requireContext())
+        workManager.cancelAllWorkByTag(placesDetail.placeID)
+        workManager.enqueueUniqueWork(placesDetail.placeID, ExistingWorkPolicy.REPLACE,request.build())
     }
 
-    private fun cancelAlarm(favID: Int) {
+    private fun cancelAlarm(favID: Int , placeID: String) {
         planViewModel.setTimeNotification(favID.toString(),"no")
-        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(requireActivity(), AlertReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(requireContext(), favID, intent, 0)
-        alarmManager.cancel(pendingIntent)
-        Toast.makeText(context,getString(R.string.cancel_alarm),Toast.LENGTH_LONG).show()
+        val workManager = androidx.work.WorkManager.getInstance(requireContext())
+        workManager.cancelAllWorkByTag(placeID)
     }
 
     override fun onTimeSelected(hourOfDay: Int, minute: Int, placesDetail: PlacesDetail) {
