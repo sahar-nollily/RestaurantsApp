@@ -1,10 +1,15 @@
 package com.bignerdranch.android.restaurantsapp.ui.plan
 
+import android.app.AlarmManager
 import android.app.AlertDialog
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,21 +19,30 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
+import com.bignerdranch.android.restaurantsapp.data.PlacesDetail
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentDayPlansBinding
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentUserPlansBinding
-import com.bignerdranch.android.restaurantsapp.data.PlacesDetail
+import com.bignerdranch.android.restaurantsapp.ui.TimePickerFragment
+import com.bignerdranch.android.restaurantsapp.util.AlertReceiver
+import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.util.SwipeController
-import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
 import com.bignerdranch.android.restaurantsapp.viewmodel.place.PlaceDetailViewModel
+import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
+
+private const val DIALOG_TIME = "DialogTime"
+private const val REQUEST_TIME = 1
 
 
-class DayPlansFragment : Fragment() {
+@AndroidEntryPoint
+class DayPlansFragment : Fragment(), TimePickerFragment.Callbacks {
 
     private val args by navArgs<DayPlansFragmentArgs>()
 
@@ -36,6 +50,7 @@ class DayPlansFragment : Fragment() {
 
     private var adapter = PlaceAdapter(emptyList())
     private lateinit var checkNetwork: CheckNetwork
+    private lateinit var binding: FragmentDayPlansBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -89,12 +104,27 @@ class DayPlansFragment : Fragment() {
                         CenterCrop(), RoundedCorners(20)
                     )).into(binding.imageView)
             }
+            if(placesDetail.time=="no"){
+                binding.timeTextView.visibility = View.GONE
+                binding.cancelAlarmButton.visibility = View.GONE
+            }else{
+                binding.timeTextView.visibility = View.VISIBLE
+                binding.cancelAlarmButton.visibility = View.VISIBLE
+            }
+            binding.cancelAlarmButton.setOnClickListener {
+                cancelAlarm(placesDetail.favID)
+            }
+            binding.icTime.setOnClickListener {
+                TimePickerFragment(placesDetail).apply {
+                    setTargetFragment(this@DayPlansFragment, REQUEST_TIME)
+                    show(this@DayPlansFragment.requireFragmentManager(), DIALOG_TIME) }
+            }
         }
     }
 
     private inner class PlaceAdapter(private var place: List<PlacesDetail>): RecyclerView.Adapter<PlaceHolder>(){
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceHolder {
-            val binding: FragmentDayPlansBinding = DataBindingUtil.inflate(layoutInflater,
+            binding = DataBindingUtil.inflate(layoutInflater,
                 R.layout.fragment_day_plans,parent,false)
             return PlaceHolder(binding)
         }
@@ -132,6 +162,44 @@ class DayPlansFragment : Fragment() {
                         notifyDataSetChanged()
                     }.show()
         }
+    }
+
+    private fun startAlarm(calendar: Calendar, placesDetail: PlacesDetail) {
+        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(requireActivity(), AlertReceiver::class.java)
+        intent.putExtra("name",placesDetail.name)
+        val pendingIntent = PendingIntent.getBroadcast(requireContext(), placesDetail.favID, intent, 0)
+
+        if (calendar.before(Calendar.getInstance())) {
+            calendar.add(Calendar.DATE, 1)
+        }
+        alarmManager[AlarmManager.RTC_WAKEUP, calendar.timeInMillis] = pendingIntent
+    }
+
+    private fun cancelAlarm(favID: Int) {
+        planViewModel.setTimeNotification(favID.toString(),"no")
+        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(requireActivity(), AlertReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(requireContext(), favID, intent, 0)
+        alarmManager.cancel(pendingIntent)
+        Toast.makeText(context,getString(R.string.cancel_alarm),Toast.LENGTH_LONG).show()
+    }
+
+    override fun onTimeSelected(hourOfDay: Int, minute: Int, placesDetail: PlacesDetail) {
+        val time = "$hourOfDay: $minute"
+        binding.restaurantNameTextView.text = time
+        planViewModel.setTimeNotification(placesDetail.favID.toString(),time)
+        var spf = SimpleDateFormat("MMM dd, yyyy")
+        val newDate: Date = spf.parse(args.plan.date)
+        spf = SimpleDateFormat("dd-MM-yyyy")
+        val date = spf.format(newDate).split("-")
+        val year =date[2].toInt()
+        val month = date[1].toInt()-1
+        val day = date[0].toInt()
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = System.currentTimeMillis()
+        calendar[year, month, day, hourOfDay, minute] = 0
+        startAlarm(calendar,placesDetail)
     }
 
 

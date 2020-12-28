@@ -1,5 +1,6 @@
 package com.bignerdranch.android.restaurantsapp.ui.place
 
+
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -51,6 +52,7 @@ class PlacesListFragment : Fragment() {
          binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_places_list,container,false)
 
+        binding.animationView.visibility = View.GONE
         checkNetwork = CheckNetwork(context)
 
         if (checkNetwork.isNetworkAvailable()){
@@ -61,10 +63,7 @@ class PlacesListFragment : Fragment() {
 
         binding.locationSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (checkNetwork.isNetworkAvailable()){
-                    getPlaces("${args.places} $query" )
-                }
-                return true
+                return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -116,11 +115,12 @@ class PlacesListFragment : Fragment() {
             val place = places[position]
             val latLng = "${place.coordinates.latitude}, ${place.coordinates.longitude}"
 
-            val weather = weathersViewModel.getWeather(place.placeID).value
-
-            if(weather != null){
-                holder.bind(place, weather)
-            }
+            weathersViewModel.getWeather(place.placeID).observe(viewLifecycleOwner,
+                Observer {
+                    if(it != null){
+                        holder.bind(place, it)
+                    }
+                })
 
             holder.itemView.setOnClickListener {
                 val action =
@@ -151,12 +151,15 @@ class PlacesListFragment : Fragment() {
     }
 
     private fun getPlaces(places: String){
+        binding.animationView.visibility = View.VISIBLE
         placesViewModel.getPlaces(places, args.latitude, args.longitude).observe(viewLifecycleOwner,
                 Observer{places->
                     if(places.isNotEmpty()){
                         adapter.setData(places)
+                        binding.animationView.visibility = View.GONE
                         Log.d("TEST","********************************************************* $places")
                     }
                 })
     }
+
 }

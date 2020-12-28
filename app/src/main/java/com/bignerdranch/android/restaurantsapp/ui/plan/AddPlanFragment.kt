@@ -17,12 +17,14 @@ import com.bignerdranch.android.restaurantsapp.data.Plan
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentAddPlanBinding
 import com.bignerdranch.android.restaurantsapp.ui.DatePickerFragment
 import com.bignerdranch.android.restaurantsapp.viewmodel.plan.PlanViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.DateFormat
 import java.util.*
 
 private const val REQUEST_DATE = 0
 private const val DIALOG_DATE = "DialogDate"
 
+@AndroidEntryPoint
 class AddPlanFragment : Fragment() , DatePickerFragment.Callbacks{
 
     private val args by navArgs<AddPlanFragmentArgs>()
@@ -57,8 +59,7 @@ class AddPlanFragment : Fragment() , DatePickerFragment.Callbacks{
                     val description = binding.planDescriptionTextView.text.toString()
                     checkInputValidation(name, description)
                     if(checkInputValidation(name, description)){
-                        val plan = Plan(0, name, color, date, description)
-                        planViewModel.addPlan(plan)
+                        planViewModel.addPlan( name, color, date, description)
                         val action =
                             AddPlanFragmentDirections.actionAddPlanFragmentToUserPlansFragment()
                         findNavController().navigate(action)

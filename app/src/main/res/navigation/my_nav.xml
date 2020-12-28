@@ -79,7 +79,10 @@
             android:id="@+id/action_restaurantsDetailFragment_to_userPlansFragment"
             app:destination="@id/userPlansFragment"
             app:popUpTo="@id/userPlansFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_restaurantsDetailFragment_to_placeReviewFragment"
+            app:destination="@id/placeReviewFragment" />
     </fragment>
     <fragment
         android:id="@+id/addPlanFragment"
@@ -123,7 +126,7 @@
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_userPlansFragment_to_DayPlansFragment"
-            app:destination="@id/DayPlansFragment" />
+            app:destination="@id/DayPlansFragment"/>
         <argument
             android:name="CRUD"
             app:argType="string"
@@ -136,5 +139,17 @@
             android:name="note"
             app:argType="string"
             android:defaultValue='""' />
+        <action
+            android:id="@+id/action_userPlansFragment_to_DayPlansFragment2"
+            app:destination="@id/DayPlansFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/placeReviewFragment"
+        android:name="com.bignerdranch.android.restaurantsapp.ui.place.PlaceReviewFragment"
+        android:label="fragment_place_review"
+        tools:layout="@layout/fragment_place_review" >
+        <argument
+            android:name="placeID"
+            app:argType="string" />
+    </dialog>
 </navigation>

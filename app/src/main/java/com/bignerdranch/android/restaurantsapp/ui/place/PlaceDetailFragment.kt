@@ -1,7 +1,6 @@
 package com.bignerdranch.android.restaurantsapp.ui.place
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bignerdranch.android.restaurantsapp.util.CheckNetwork
 import com.bignerdranch.android.restaurantsapp.R
-import com.bignerdranch.android.restaurantsapp.databinding.DialogAddNoteBinding
 import com.bignerdranch.android.restaurantsapp.databinding.FragmentPlaceDetailBinding
 import com.bignerdranch.android.restaurantsapp.databinding.ViewPagerItemBinding
 import com.bignerdranch.android.restaurantsapp.databinding.WeatherListItemBinding
@@ -91,7 +89,8 @@ class PlaceDetailFragment : Fragment(), OnMapReadyCallback {
                     })
                 binding.favPlace.visibility = View.VISIBLE
                 binding.favPlace.setOnClickListener {
-                    addNote()
+                    val action = PlaceDetailFragmentDirections.actionRestaurantsDetailFragmentToUserPlansFragment("add",args.restaurantId)
+                    findNavController().navigate(action)
                 }
             }
 
@@ -130,6 +129,7 @@ class PlaceDetailFragment : Fragment(), OnMapReadyCallback {
                     }
 
                 })
+
             }
 
             binding.restaurantShareTextView.setOnClickListener {
@@ -145,6 +145,11 @@ class PlaceDetailFragment : Fragment(), OnMapReadyCallback {
                 val intent = Intent(Intent.ACTION_DIAL)
                 intent.data = Uri.parse("tel:"+placesDetail.phone)
                 startActivity(intent)
+            }
+
+            binding.reviewTextView.setOnClickListener {
+                val action = PlaceDetailFragmentDirections.actionRestaurantsDetailFragmentToPlaceReviewFragment(args.restaurantId)
+                findNavController().navigate(action)
             }
 
         }
@@ -179,21 +184,6 @@ class PlaceDetailFragment : Fragment(), OnMapReadyCallback {
             holder.bind(image)
         }
 
-    }
-
-    private fun addNote(){
-        val dialogBuilder = AlertDialog.Builder(requireContext())
-        val binding: DialogAddNoteBinding = DataBindingUtil.inflate(layoutInflater,R.layout.dialog_add_note,null,false)
-        val dialogView = binding.root
-        dialogBuilder.setView(dialogView)
-        val alertDialog = dialogBuilder.create()
-        alertDialog.show()
-        binding.addNoteButton.setOnClickListener {
-            val note = binding.noteEditText.text.toString()
-            val action = PlaceDetailFragmentDirections.actionRestaurantsDetailFragmentToUserPlansFragment("add",args.restaurantId,note)
-            findNavController().navigate(action)
-            alertDialog.dismiss()
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

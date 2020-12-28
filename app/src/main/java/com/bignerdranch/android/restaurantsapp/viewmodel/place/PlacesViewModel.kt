@@ -5,8 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bignerdranch.android.restaurantsapp.data.PlaceReview
 import com.bignerdranch.android.restaurantsapp.data.Places
 import com.bignerdranch.android.restaurantsapp.data.PlacesDetail
+import com.bignerdranch.android.restaurantsapp.data.ReviewResponse
 import com.bignerdranch.android.restaurantsapp.repository.PlaceRepository
 import kotlinx.coroutines.launch
 
@@ -14,14 +16,13 @@ class PlacesViewModel @ViewModelInject constructor(
     private val yelpRepository: PlaceRepository
 ): ViewModel(){
 
-    private val place = MutableLiveData<List<Places>>()
+    private var place = MutableLiveData<List<Places>>()
     private val placesDetail = MutableLiveData<PlacesDetail>()
+    private val placeReview = MutableLiveData<ReviewResponse>()
 
 
     fun getPlace() : LiveData<List<Places>> {
-        viewModelScope.launch {
-            place.value = yelpRepository.getPlace()
-        }
+        place = yelpRepository.getPlace() as MutableLiveData<List<Places>>
         return place
     }
 
@@ -32,11 +33,18 @@ class PlacesViewModel @ViewModelInject constructor(
         return place
     }
 
-    fun placeDetails(restaurantId: String): LiveData<PlacesDetail> {
+    fun placeDetails(placeId: String): LiveData<PlacesDetail> {
         viewModelScope.launch {
-            placesDetail.value = yelpRepository.placeDetails(restaurantId)
+            placesDetail.value = yelpRepository.placeDetails(placeId)
         }
         return placesDetail
+    }
+
+    fun placeReview(placeId: String): LiveData<ReviewResponse> {
+        viewModelScope.launch {
+            placeReview.value = yelpRepository.placeReview(placeId)
+        }
+        return placeReview
     }
 
 }

@@ -2,6 +2,7 @@ package com.bignerdranch.android.restaurantsapp.network.places
 
 import com.bignerdranch.android.restaurantsapp.BuildConfig
 import com.bignerdranch.android.restaurantsapp.data.PlacesDetail
+import com.bignerdranch.android.restaurantsapp.data.ReviewResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
@@ -18,5 +19,10 @@ interface PlaceApi{
     @GET("businesses/{id}")
     suspend fun placeDetails(@Path("id")placeId: String,
                              @Header("Authorization") authorization: String = "Bearer "+BuildConfig.RESTAURANT_API_KEY): PlacesDetail
+
+
+    @GET("businesses/{id}/reviews")
+    suspend fun placeReview(@Path("id")placeId: String,
+                            @Header("Authorization") authorization: String = "Bearer "+BuildConfig.RESTAURANT_API_KEY): ReviewResponse
 
 }

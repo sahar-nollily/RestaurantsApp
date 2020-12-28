@@ -11,8 +11,6 @@ import com.bignerdranch.android.restaurantsapp.network.weather.WeatherApi
 import com.bignerdranch.android.restaurantsapp.repository.PlaceRepository
 import com.bignerdranch.android.restaurantsapp.repository.PlanRepository
 import com.bignerdranch.android.restaurantsapp.repository.WeatherRepository
-import com.bignerdranch.android.restaurantsapp.test.FakePlanRepository
-import com.bignerdranch.android.restaurantsapp.test.PlanTest
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -143,11 +141,4 @@ object AppModule {
     fun weatherDao (@ApplicationContext context: Context): WeatherDao {
         return AppModule_ProvideWeatherDaoFactory.provideWeatherDao(initializeYelpDatabase(context))
     }
-
-    @Singleton
-    @Provides
-    fun provideFakeWeatherRepository(
-        planDao: PlanDao
-    ) = FakePlanRepository(planDao) as PlanTest
-
 }

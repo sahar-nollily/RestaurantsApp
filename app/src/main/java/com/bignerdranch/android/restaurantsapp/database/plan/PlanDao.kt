@@ -29,6 +29,9 @@ interface PlanDao{
     @Query("SELECT * FROM PlacesDetail WHERE placeID =:placeID ")
     fun getFavDetails(placeID: String): LiveData<PlacesDetail>
 
+    @Query("UPDATE PlacesDetail SET time=:time WHERE favID=:favID ")
+    suspend fun setTimeNotification(favID: String,time: String)
+
     @Delete
     suspend fun deleteFavDetails(placesDetail: PlacesDetail)
 

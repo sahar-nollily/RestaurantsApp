@@ -7,29 +7,35 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PlanRepository @Inject constructor(private val planDao: PlanDao){
+class PlanRepository @Inject constructor(private val planDao: PlanDao) : IPlanRepository {
 
-    fun getPlan() = planDao.getPlan()
-    fun getFavPlace(planID: String) = planDao.getFavPlace(planID)
-    fun getFavDetails(placeID: String) = planDao.getFavDetails(placeID)
+    override fun getPlan() = planDao.getPlan()
+    override fun getFavPlace(planID: String) = planDao.getFavPlace(planID)
+    override fun getFavDetails(placeID: String) = planDao.getFavDetails(placeID)
 
-    suspend fun addPlan(plan: Plan){
+
+
+    override suspend fun addPlan(plan: Plan){
         planDao.addPlan(plan)
     }
 
-    suspend fun updatePlan(plan: Plan){
+    override suspend fun updatePlan(plan: Plan){
         planDao.updatePlan(plan)
     }
 
-    suspend fun deletePlan(plan: Plan){
+    override suspend fun deletePlan(plan: Plan){
         planDao.deletePlan(plan)
     }
 
-    suspend fun addFavPlace(placesDetail: PlacesDetail){
+    override suspend fun addFavPlace(placesDetail: PlacesDetail){
         planDao.addFavPlace(placesDetail)
     }
 
-    suspend fun deleteFavDetails(placesDetail: PlacesDetail){
+    override suspend fun setTimeNotification(favID: String, time: String){
+        planDao.setTimeNotification(favID, time)
+    }
+
+    override suspend fun deleteFavDetails(placesDetail: PlacesDetail){
         planDao.deleteFavDetails(placesDetail)
     }
 
