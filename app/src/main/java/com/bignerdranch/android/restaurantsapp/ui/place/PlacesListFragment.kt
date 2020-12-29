@@ -145,7 +145,10 @@ class PlacesListFragment : Fragment() {
     }
 
     private fun getDataWhenNoNetwork(){
-        placesViewModel.getPlace().observe(viewLifecycleOwner, Observer{ adapter.setData(it)
+        placesViewModel.getPlace().observe(viewLifecycleOwner, Observer{ 
+            if(it.isNotEmpty()){
+                adapter.setData(it)
+            }
                     Log.d("TEST","********************************************************* no Internet")
                 })
     }

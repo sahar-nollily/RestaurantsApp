@@ -126,7 +126,6 @@ class UserPlansFragment : Fragment() {
                 holder.bind(plan)
 
                 holder.itemView.setOnClickListener {
-                    if(checkNetwork.isNetworkAvailable()){
                         if(args.CRUD == "add"){
                             val placeDetails = placesViewModel.placeDetails(args.placeID).value
                             if(placeDetails != null){
@@ -136,7 +135,6 @@ class UserPlansFragment : Fragment() {
                             val action = UserPlansFragmentDirections.actionUserPlansFragmentToDayPlansFragment(plan)
                             findNavController().navigate(action)
                         }
-                    }
                 }
             }
         }
