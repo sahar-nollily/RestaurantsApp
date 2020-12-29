@@ -28,6 +28,10 @@ class FakePlanRepositoryTest : IPlanRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun setTimeNotification(favID: String, time: String) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun addPlan(plan: Plan) {
         plans.add(plan)
         refreshLiveData()

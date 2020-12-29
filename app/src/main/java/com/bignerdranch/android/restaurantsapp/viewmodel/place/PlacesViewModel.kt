@@ -22,8 +22,7 @@ class PlacesViewModel @ViewModelInject constructor(
 
 
     fun getPlace() : LiveData<List<Places>> {
-        place = yelpRepository.getPlace() as MutableLiveData<List<Places>>
-        return place
+        return yelpRepository.getPlace()
     }
 
     fun getPlaces(term:String,latitude: String, longitude: String): LiveData<List<Places>> {
